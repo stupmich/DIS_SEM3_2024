@@ -14,8 +14,10 @@ public class Mc extends IdList
 	public static final int pripravaObjednavky = 1009;
 	public static final int platenie = 1010;
 	public static final int vyzdvihnutieVelkejObjednavky = 1011;
+	public static final int dajPocetMiestVCakarni = 1012;
 	//meta! tag="end"
 
 	// 1..1000 range reserved for user
 	public static final int novyZakaznik = 1;
+	public static final int koniecInterakcie = 2;
 }

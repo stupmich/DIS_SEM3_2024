@@ -4,7 +4,6 @@ import OSPABA.*;
 import simulation.*;
 import agents.*;
 import continualAssistants.*;
-import instantAssistants.*;
 
 //meta! id="1"
 public class ManagerModelu extends Manager
@@ -67,12 +66,12 @@ public class ManagerModelu extends Manager
 	{
 		switch (message.code())
 		{
-		case Mc.obsluhaZakaznika:
-			processObsluhaZakaznika(message);
-		break;
-
 		case Mc.prichodZakaznika:
 			processPrichodZakaznika(message);
+		break;
+
+		case Mc.obsluhaZakaznika:
+			processObsluhaZakaznika(message);
 		break;
 
 		default:

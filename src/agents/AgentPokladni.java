@@ -4,7 +4,6 @@ import OSPABA.*;
 import simulation.*;
 import managers.*;
 import continualAssistants.*;
-import instantAssistants.*;
 
 //meta! id="7"
 public class AgentPokladni extends Agent

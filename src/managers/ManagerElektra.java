@@ -4,7 +4,6 @@ import OSPABA.*;
 import simulation.*;
 import agents.*;
 import continualAssistants.*;
-import instantAssistants.*;
 
 //meta! id="5"
 public class ManagerElektra extends Manager
@@ -59,6 +58,10 @@ public class ManagerElektra extends Manager
 	//meta! sender="AgentAutomatu", id="26", type="Response"
 	public void processVydanieListku(MessageForm message)
 	{
+		message.setCode(Mc.obsluhaZakaznika);
+		message.setAddressee(mySim().findAgent(Id.agentModelu));
+
+		response(message);
 	}
 
 	//meta! userInfo="Process messages defined in code", id="0"
@@ -67,6 +70,20 @@ public class ManagerElektra extends Manager
 		switch (message.code())
 		{
 		}
+	}
+
+	//meta! sender="AgentObsluznychMiest", id="57", type="Response"
+	public void processDajPocetMiestVCakarniAgentObsluznychMiest(MessageForm message)
+	{
+		message.setAddressee(mySim().findAgent(Id.agentAutomatu));
+		response(message);
+	}
+
+	//meta! sender="AgentAutomatu", id="56", type="Request"
+	public void processDajPocetMiestVCakarniAgentAutomatu(MessageForm message)
+	{
+		message.setAddressee(mySim().findAgent(Id.agentObsluznychMiest));
+		request(message);
 	}
 
 	//meta! userInfo="Generated code: do not modify", tag="begin"
@@ -79,12 +96,29 @@ public class ManagerElektra extends Manager
 	{
 		switch (message.code())
 		{
-		case Mc.platenie:
-			processPlatenie(message);
+		case Mc.vydanieListku:
+			processVydanieListku(message);
+		break;
+
+		case Mc.dajPocetMiestVCakarni:
+			switch (message.sender().id())
+			{
+			case Id.agentObsluznychMiest:
+				processDajPocetMiestVCakarniAgentObsluznychMiest(message);
+			break;
+
+			case Id.agentAutomatu:
+				processDajPocetMiestVCakarniAgentAutomatu(message);
+			break;
+			}
 		break;
 
 		case Mc.pripravaObjednavky:
 			processPripravaObjednavky(message);
+		break;
+
+		case Mc.platenie:
+			processPlatenie(message);
 		break;
 
 		case Mc.obsluhaZakaznika:
@@ -97,10 +131,6 @@ public class ManagerElektra extends Manager
 
 		case Mc.vyzdvihnutieVelkejObjednavky:
 			processVyzdvihnutieVelkejObjednavky(message);
-		break;
-
-		case Mc.vydanieListku:
-			processVydanieListku(message);
 		break;
 
 		default:

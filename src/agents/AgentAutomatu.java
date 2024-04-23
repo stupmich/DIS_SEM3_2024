@@ -7,7 +7,6 @@ import OSPStat.WStat;
 import simulation.*;
 import managers.*;
 import continualAssistants.*;
-import instantAssistants.*;
 
 //meta! id="23"
 public class AgentAutomatu extends Agent
@@ -20,6 +19,7 @@ public class AgentAutomatu extends Agent
 	{
 		super(id, mySim, parent);
 		init();
+		addOwnMessage(Mc.koniecInterakcie);
 	}
 
 	@Override
@@ -37,6 +37,7 @@ public class AgentAutomatu extends Agent
 	{
 		new ManagerAutomatu(Id.managerAutomatu, mySim(), this);
 		new ProcesInterakciaAutomat(Id.procesInterakciaAutomat, mySim(), this);
+		addOwnMessage(Mc.dajPocetMiestVCakarni);
 		addOwnMessage(Mc.vydanieListku);
 	}
 	//meta! tag="end"

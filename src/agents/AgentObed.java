@@ -4,7 +4,6 @@ import OSPABA.*;
 import simulation.*;
 import managers.*;
 import continualAssistants.*;
-import instantAssistants.*;
 
 //meta! id="17"
 public class AgentObed extends Agent

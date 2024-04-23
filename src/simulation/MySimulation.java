@@ -12,6 +12,7 @@ public class MySimulation extends Simulation
 
 	public MySimulation()
 	{
+		seedGenerator = new Random();
 		init();
 	}
 
@@ -20,7 +21,6 @@ public class MySimulation extends Simulation
 	{
 		super.prepareSimulation();
 		// Create global statistcis
-		seedGenerator = new Random();
 	}
 
 	@Override

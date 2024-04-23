@@ -1,16 +1,22 @@
 package continualAssistants;
 
 import OSPABA.*;
+import OSPRNG.ExponentialRNG;
 import simulation.*;
 import agents.*;
 import OSPABA.Process;
 
+import java.util.Random;
+
 //meta! id="43"
 public class ProcesInterakciaAutomat extends Process
 {
+	private static Random durationInteraction;
+
 	public ProcesInterakciaAutomat(int id, Simulation mySim, CommonAgent myAgent)
 	{
 		super(id, mySim, myAgent);
+		durationInteraction = new Random(((MySimulation)mySim()).getSeedGenerator().nextInt());
 	}
 
 	@Override
@@ -23,6 +29,8 @@ public class ProcesInterakciaAutomat extends Process
 	//meta! sender="AgentAutomatu", id="44", type="Start"
 	public void processStart(MessageForm message)
 	{
+		message.setCode(Mc.koniecInterakcie);
+		hold(durationInteraction.nextDouble(30.0,120.0), message);
 	}
 
 	//meta! userInfo="Process messages defined in code", id="0"
@@ -30,6 +38,9 @@ public class ProcesInterakciaAutomat extends Process
 	{
 		switch (message.code())
 		{
+			case Mc.koniecInterakcie:
+				assistantFinished(message);
+				break;
 		}
 	}
 

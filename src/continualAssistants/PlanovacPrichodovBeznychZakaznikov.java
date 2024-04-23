@@ -1,5 +1,6 @@
 package continualAssistants;
 
+import Entities.Customer;
 import OSPABA.*;
 import OSPRNG.ExponentialRNG;
 import simulation.*;
@@ -36,10 +37,17 @@ public class PlanovacPrichodovBeznychZakaznikov extends Scheduler
 		switch (message.code())
 		{
 			case Mc.novyZakaznik:
-				MessageForm copy = message.createCopy();
-				hold(_exp.sample(), copy);
+				double next = _exp.sample();
+				next = next * 60.0;
 
-				assistantFinished(message);
+				if (mySim().currentTime() + next <= 28800.0) {
+					MessageForm copy = message.createCopy();
+					hold(next, copy);
+
+					Customer newCustomer = new Customer(_mySim, mySim().currentTime(), Customer.CustomerType.REGULAR);
+					((MyMessage) message).setCustomer(newCustomer);
+					assistantFinished(message);
+				}
 				break;
 		}
 	}

@@ -4,7 +4,6 @@ import OSPABA.*;
 import simulation.*;
 import managers.*;
 import continualAssistants.*;
-import instantAssistants.*;
 
 //meta! id="5"
 public class AgentElektra extends Agent
@@ -28,6 +27,7 @@ public class AgentElektra extends Agent
 		new ManagerElektra(Id.managerElektra, mySim(), this);
 		addOwnMessage(Mc.jeCasObedu);
 		addOwnMessage(Mc.pripravaObjednavky);
+		addOwnMessage(Mc.dajPocetMiestVCakarni);
 		addOwnMessage(Mc.obsluhaZakaznika);
 		addOwnMessage(Mc.vyzdvihnutieVelkejObjednavky);
 		addOwnMessage(Mc.platenie);

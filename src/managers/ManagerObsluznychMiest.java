@@ -1,10 +1,10 @@
 package managers;
 
 import OSPABA.*;
+import OSPDataStruct.SimQueue;
 import simulation.*;
 import agents.*;
 import continualAssistants.*;
-import instantAssistants.*;
 
 //meta! id="6"
 public class ManagerObsluznychMiest extends Manager
@@ -65,6 +65,16 @@ public class ManagerObsluznychMiest extends Manager
 		}
 	}
 
+	//meta! sender="AgentElektra", id="57", type="Request"
+	public void processDajPocetMiestVCakarni(MessageForm message)
+	{
+		message.setCode(Mc.dajPocetMiestVCakarni);
+		message.setAddressee(mySim().findAgent(Id.agentElektra));
+		((MyMessage) message).setNumberOfFreePlacesWaitingRoom(9 - myAgent().get_customersWaitingForService().size());
+
+		response(message);
+	}
+
 	//meta! userInfo="Generated code: do not modify", tag="begin"
 	public void init()
 	{
@@ -75,33 +85,37 @@ public class ManagerObsluznychMiest extends Manager
 	{
 		switch (message.code())
 		{
+		case Mc.dajPocetMiestVCakarni:
+			processDajPocetMiestVCakarni(message);
+		break;
+
 		case Mc.pripravaObjednavky:
 			processPripravaObjednavky(message);
+		break;
+
+		case Mc.vyzdvihnutieVelkejObjednavky:
+			processVyzdvihnutieVelkejObjednavky(message);
 		break;
 
 		case Mc.finish:
 			switch (message.sender().id())
 			{
-			case Id.procesPripravaObjednavky:
-				processFinishProcesPripravaObjednavky(message);
+			case Id.procesVyzdvihnutieVelkehoTovaru:
+				processFinishProcesVyzdvihnutieVelkehoTovaru(message);
 			break;
 
 			case Id.procesDiktovanieObjednavky:
 				processFinishProcesDiktovanieObjednavky(message);
 			break;
 
-			case Id.procesVyzdvihnutieVelkehoTovaru:
-				processFinishProcesVyzdvihnutieVelkehoTovaru(message);
+			case Id.procesPripravaObjednavky:
+				processFinishProcesPripravaObjednavky(message);
 			break;
 			}
 		break;
 
 		case Mc.jeCasObedu:
 			processJeCasObedu(message);
-		break;
-
-		case Mc.vyzdvihnutieVelkejObjednavky:
-			processVyzdvihnutieVelkejObjednavky(message);
 		break;
 
 		default:

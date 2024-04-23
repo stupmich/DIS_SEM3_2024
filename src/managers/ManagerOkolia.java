@@ -4,7 +4,6 @@ import OSPABA.*;
 import simulation.*;
 import agents.*;
 import continualAssistants.*;
-import instantAssistants.*;
 
 //meta! id="3"
 public class ManagerOkolia extends Manager
@@ -36,6 +35,8 @@ public class ManagerOkolia extends Manager
 	//meta! sender="PlanovacPrichodovZakaznikovValidMod", id="41", type="Finish"
 	public void processFinishPlanovacPrichodovZakaznikovValidMod(MessageForm message)
 	{
+		myAgent().incCountCustomersIn();
+
 		message.setCode(Mc.prichodZakaznika);
 		message.setAddressee(mySim().findAgent(Id.agentModelu));
 
@@ -45,6 +46,8 @@ public class ManagerOkolia extends Manager
 	//meta! sender="PlanovacPrichodovOnlineZakaznikov", id="39", type="Finish"
 	public void processFinishPlanovacPrichodovOnlineZakaznikov(MessageForm message)
 	{
+		myAgent().incCountCustomersIn();
+
 		message.setCode(Mc.prichodZakaznika);
 		message.setAddressee(mySim().findAgent(Id.agentModelu));
 
@@ -54,6 +57,8 @@ public class ManagerOkolia extends Manager
 	//meta! sender="PlanovacPrichodovBeznychZakaznikov", id="35", type="Finish"
 	public void processFinishPlanovacPrichodovBeznychZakaznikov(MessageForm message)
 	{
+		myAgent().incCountCustomersIn();
+
 		message.setCode(Mc.prichodZakaznika);
 		message.setAddressee(mySim().findAgent(Id.agentModelu));
 
@@ -63,6 +68,8 @@ public class ManagerOkolia extends Manager
 	//meta! sender="PlanovacPrichodovZmluvnychZakaznikov", id="37", type="Finish"
 	public void processFinishPlanovacPrichodovZmluvnychZakaznikov(MessageForm message)
 	{
+		myAgent().incCountCustomersIn();
+
 		message.setCode(Mc.prichodZakaznika);
 		message.setAddressee(mySim().findAgent(Id.agentModelu));
 
@@ -72,6 +79,10 @@ public class ManagerOkolia extends Manager
 	//meta! sender="AgentModelu", id="14", type="Notice"
 	public void processOdchodZakaznika(MessageForm message)
 	{
+		myAgent().incCountCustomersOut();
+		System.out.println("odisiel");
+		System.out.println("in " + myAgent().getCountCustomersIn() );
+		System.out.println("out " + myAgent().getCountCustomersOut());
 	}
 
 	//meta! userInfo="Process messages defined in code", id="0"
@@ -92,33 +103,33 @@ public class ManagerOkolia extends Manager
 	{
 		switch (message.code())
 		{
-		case Mc.inicializuj:
-			processInicializuj(message);
-		break;
-
 		case Mc.finish:
 			switch (message.sender().id())
 			{
-			case Id.planovacPrichodovZakaznikovValidMod:
-				processFinishPlanovacPrichodovZakaznikovValidMod(message);
+			case Id.planovacPrichodovBeznychZakaznikov:
+				processFinishPlanovacPrichodovBeznychZakaznikov(message);
 			break;
 
 			case Id.planovacPrichodovOnlineZakaznikov:
 				processFinishPlanovacPrichodovOnlineZakaznikov(message);
 			break;
 
-			case Id.planovacPrichodovBeznychZakaznikov:
-				processFinishPlanovacPrichodovBeznychZakaznikov(message);
-			break;
-
 			case Id.planovacPrichodovZmluvnychZakaznikov:
 				processFinishPlanovacPrichodovZmluvnychZakaznikov(message);
+			break;
+
+			case Id.planovacPrichodovZakaznikovValidMod:
+				processFinishPlanovacPrichodovZakaznikovValidMod(message);
 			break;
 			}
 		break;
 
 		case Mc.odchodZakaznika:
 			processOdchodZakaznika(message);
+		break;
+
+		case Mc.inicializuj:
+			processInicializuj(message);
 		break;
 
 		default:
