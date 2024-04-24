@@ -1,18 +1,29 @@
 package simulation;
 
+import Entities.Worker;
 import OSPABA.*;
 import agents.*;
 
+import java.util.LinkedList;
 import java.util.Random;
 
 public class MySimulation extends Simulation
 {
+	private int numberOfWorkersOrder;
+	private int numberOfWorkersPayment;
+	private int numberOfNormalWorkers;
+	private int numberOfOnlineWorkers;
 	private boolean	validationMode = true;
 	private Random seedGenerator;
 
-	public MySimulation()
+	public MySimulation(int numberOfWorkersOrder, int numberOfWorkersPayment)
 	{
 		seedGenerator = new Random();
+		this.numberOfWorkersOrder = numberOfWorkersOrder;
+		this.numberOfWorkersPayment = numberOfWorkersPayment;
+		this.numberOfOnlineWorkers = this.numberOfWorkersOrder / 3;
+		this.numberOfNormalWorkers = this.numberOfWorkersOrder - numberOfOnlineWorkers;
+
 		init();
 	}
 
@@ -29,6 +40,9 @@ public class MySimulation extends Simulation
 		super.prepareReplication();
 		// Reset entities, queues, local statistics, etc...
 		agentModelu().spustiSimulaciu();
+		agentObsluznychMiest().prepareReplication();
+		agentPokladni().prepareReplication();
+		agentOkolia().prepareReplication();
 	}
 
 	@Override
@@ -121,5 +135,21 @@ public AgentAutomatu agentAutomatu()
 
 	public Random getSeedGenerator() {
 		return seedGenerator;
+	}
+
+	public int getNumberOfWorkersOrder() {
+		return numberOfWorkersOrder;
+	}
+
+	public int getNumberOfWorkersPayment() {
+		return numberOfWorkersPayment;
+	}
+
+	public int getNumberOfNormalWorkers() {
+		return numberOfNormalWorkers;
+	}
+
+	public int getNumberOfOnlineWorkers() {
+		return numberOfOnlineWorkers;
 	}
 }

@@ -31,10 +31,11 @@ public class Customer extends Entity {
     double startTimeWaitingService;
     double endTimeWaitingService;
 
-    public Customer(Simulation sim, double timeArrival, CustomerType type) {
+    public Customer(int id, Simulation sim, double timeArrival, CustomerType type) {
         super(sim);
         this.timeArrival = timeArrival;
         this.customerType = type;
+        this.id = id;
     }
 
     public int getId() {

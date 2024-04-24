@@ -1,5 +1,6 @@
 package agents;
 
+import Entities.Worker;
 import OSPABA.*;
 import OSPDataStruct.SimQueue;
 import OSPStat.WStat;
@@ -7,10 +8,17 @@ import simulation.*;
 import managers.*;
 import continualAssistants.*;
 
+import java.util.LinkedList;
+
 //meta! id="6"
 public class AgentObsluznychMiest extends Agent
 {
+	private int highestWorkersOrderID;
 	private SimQueue< MessageForm > _customersWaitingForService;
+	private LinkedList<Worker> workersOrderNormal;
+	private LinkedList<Worker> workersOrderOnline;
+	private LinkedList<Worker> workersOrderWorkingNormal;
+	private LinkedList<Worker> workersOrderWorkingOnline;
 
 	public AgentObsluznychMiest(int id, Simulation mySim, Agent parent)
 	{
@@ -23,7 +31,25 @@ public class AgentObsluznychMiest extends Agent
 	{
 		super.prepareReplication();
 		// Setup component for the next replication
+		highestWorkersOrderID = 0;
 		_customersWaitingForService = new SimQueue<>(new WStat(mySim()));
+
+		this.workersOrderNormal = new LinkedList<Worker>();
+		this.workersOrderOnline = new LinkedList<Worker>();
+		this.workersOrderWorkingNormal = new LinkedList<Worker>();
+		this.workersOrderWorkingOnline = new LinkedList<Worker>();
+
+		for (int i = 0; i < ((MySimulation)mySim()).getNumberOfNormalWorkers(); i++ ) {
+			Worker worker = new Worker(highestWorkersOrderID, Worker.WorkerType.ORDER_REGULAR_AND_CONTRACT, mySim());
+			workersOrderNormal.add(worker);
+			highestWorkersOrderID++;
+		}
+
+		for (int i = 0; i < ((MySimulation)mySim()).getNumberOfOnlineWorkers(); i++ ) {
+			Worker worker = new Worker(highestWorkersOrderID, Worker.WorkerType.ORDER_ONLINE, mySim());
+			workersOrderOnline.add(worker);
+			highestWorkersOrderID++;
+		}
 	}
 
 	//meta! userInfo="Generated code: do not modify", tag="begin"
@@ -42,5 +68,21 @@ public class AgentObsluznychMiest extends Agent
 
 	public SimQueue<MessageForm> get_customersWaitingForService() {
 		return _customersWaitingForService;
+	}
+
+	public LinkedList<Worker> getWorkersOrderNormal() {
+		return workersOrderNormal;
+	}
+
+	public LinkedList<Worker> getWorkersOrderOnline() {
+		return workersOrderOnline;
+	}
+
+	public LinkedList<Worker> getWorkersOrderWorkingNormal() {
+		return workersOrderWorkingNormal;
+	}
+
+	public LinkedList<Worker> getWorkersOrderWorkingOnline() {
+		return workersOrderWorkingOnline;
 	}
 }

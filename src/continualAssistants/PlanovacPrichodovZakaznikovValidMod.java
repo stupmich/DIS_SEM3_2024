@@ -44,21 +44,22 @@ public class PlanovacPrichodovZakaznikovValidMod extends Scheduler
 				double next = _exp.sample();
 				next = next * 60.0;
 
-				if (mySim().currentTime() + next <= 28800.0) {
+				if (mySim().currentTime() + next <= Config.closeTicketDispenserTime) {
 					MessageForm copy = message.createCopy();
 					hold(next, copy);
 
 					double type = this.customerTypeRand.nextDouble();
 					if (type < 0.5) {
-						Customer newCustomer = new Customer(_mySim, mySim().currentTime(), Customer.CustomerType.REGULAR);
+						Customer newCustomer = new Customer(myAgent().getHighestCustomerID(), _mySim, mySim().currentTime(), Customer.CustomerType.REGULAR);
 						((MyMessage) message).setCustomer(newCustomer);
 					} else if (type < 0.65) {
-						Customer newCustomer = new Customer(_mySim, mySim().currentTime(), Customer.CustomerType.CONTRACT);
+						Customer newCustomer = new Customer(myAgent().getHighestCustomerID(), _mySim, mySim().currentTime(), Customer.CustomerType.CONTRACT);
 						((MyMessage) message).setCustomer(newCustomer);
 					} else {
-						Customer newCustomer = new Customer(_mySim, mySim().currentTime(), Customer.CustomerType.ONLINE);
+						Customer newCustomer = new Customer(myAgent().getHighestCustomerID(), _mySim, mySim().currentTime(), Customer.CustomerType.ONLINE);
 						((MyMessage) message).setCustomer(newCustomer);
 					}
+					myAgent().incHighestCustomerID();
 
 					assistantFinished(message);
 				}

@@ -10,6 +10,7 @@ public class AgentOkolia extends Agent
 {
 	private int countCustomersIn;
 	private int countCustomersOut;
+	private int highestCustomerID;
 
 	public AgentOkolia(int id, Simulation mySim, Agent parent)
 	{
@@ -25,6 +26,7 @@ public class AgentOkolia extends Agent
 		// Setup component for the next replication
 		this.countCustomersIn = 0;
 		this.countCustomersOut = 0;
+		this.highestCustomerID = 0;
 	}
 
 	//meta! userInfo="Generated code: do not modify", tag="begin"
@@ -53,5 +55,13 @@ public class AgentOkolia extends Agent
 
 	public int getCountCustomersOut() {
 		return countCustomersOut;
+	}
+
+	public int getHighestCustomerID() {
+		return highestCustomerID;
+	}
+
+	public void incHighestCustomerID() {
+		this.highestCustomerID++;
 	}
 }

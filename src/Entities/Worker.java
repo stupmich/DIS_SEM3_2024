@@ -15,8 +15,9 @@ public class Worker extends Entity {
     private WorkerType type;
 
 
-    public Worker(WorkerType type, Simulation sim) {
+    public Worker(int id, WorkerType type, Simulation sim) {
         super(sim);
+        this.id = id;
         this.type = type;
     }
 

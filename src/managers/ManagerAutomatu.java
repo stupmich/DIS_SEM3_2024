@@ -30,6 +30,7 @@ public class ManagerAutomatu extends Manager
 	public void processFinish(MessageForm message)
 	{
 		myAgent().set_isOccupied(false);
+		myAgent().get_customerInteractingWithTicketDispenser().remove(message);
 		//myAgent().casCakania().addSample(((MyMessage)message).celkoveCakanie());
 
 		if (myAgent().get_queueCustomersTicketDispenser().size() > 0)
@@ -125,6 +126,7 @@ public class ManagerAutomatu extends Manager
 	private void startInteractionWithTicketDispenser(MessageForm message)
 	{
 		myAgent().set_isOccupied(true);
+		myAgent().get_customerInteractingWithTicketDispenser().add(message);
 		message.setAddressee(myAgent().findAssistant(Id.procesInterakciaAutomat));
 		startContinualAssistant(message);
 	}

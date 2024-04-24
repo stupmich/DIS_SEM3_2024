@@ -40,11 +40,13 @@ public class PlanovacPrichodovZmluvnychZakaznikov extends Scheduler
 				double next = _exp.sample();
 				next = next * 60.0;
 
-				if (mySim().currentTime() + next <= 28800.0) {
+				if (mySim().currentTime() + next <= Config.closeTicketDispenserTime) {
 					MessageForm copy = message.createCopy();
 					hold(next, copy);
 
-					Customer newCustomer = new Customer(_mySim, mySim().currentTime(), Customer.CustomerType.CONTRACT);
+					Customer newCustomer = new Customer(myAgent().getHighestCustomerID(), _mySim, mySim().currentTime(), Customer.CustomerType.CONTRACT);
+					myAgent().incHighestCustomerID();
+
 					((MyMessage) message).setCustomer(newCustomer);
 					assistantFinished(message);
 				}
