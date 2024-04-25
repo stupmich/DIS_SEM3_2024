@@ -14,7 +14,7 @@ import java.util.LinkedList;
 public class AgentObsluznychMiest extends Agent
 {
 	private int highestWorkersOrderID;
-	private SimQueue< MessageForm > _customersWaitingForService;
+	private SimQueue< MessageForm > CustomersWaitingInShopBeforeOrder;
 	private LinkedList<Worker> workersOrderNormal;
 	private LinkedList<Worker> workersOrderOnline;
 	private LinkedList<Worker> workersOrderWorkingNormal;
@@ -32,7 +32,7 @@ public class AgentObsluznychMiest extends Agent
 		super.prepareReplication();
 		// Setup component for the next replication
 		highestWorkersOrderID = 0;
-		_customersWaitingForService = new SimQueue<>(new WStat(mySim()));
+		CustomersWaitingInShopBeforeOrder = new SimQueue<>(new WStat(mySim()));
 
 		this.workersOrderNormal = new LinkedList<Worker>();
 		this.workersOrderOnline = new LinkedList<Worker>();
@@ -66,8 +66,8 @@ public class AgentObsluznychMiest extends Agent
 	}
 	//meta! tag="end"
 
-	public SimQueue<MessageForm> get_customersWaitingForService() {
-		return _customersWaitingForService;
+	public SimQueue<MessageForm> getCustomersWaitingInShopBeforeOrder() {
+		return CustomersWaitingInShopBeforeOrder;
 	}
 
 	public LinkedList<Worker> getWorkersOrderNormal() {

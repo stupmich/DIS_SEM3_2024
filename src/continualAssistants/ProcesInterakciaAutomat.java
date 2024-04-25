@@ -11,12 +11,12 @@ import java.util.Random;
 //meta! id="43"
 public class ProcesInterakciaAutomat extends Process
 {
-	private static Random durationInteraction;
+	private static Random durationInteractionGenerator;
 
 	public ProcesInterakciaAutomat(int id, Simulation mySim, CommonAgent myAgent)
 	{
 		super(id, mySim, myAgent);
-		durationInteraction = new Random(((MySimulation)mySim()).getSeedGenerator().nextInt());
+		durationInteractionGenerator = new Random(((MySimulation)mySim()).getSeedGenerator().nextInt());
 	}
 
 	@Override
@@ -30,7 +30,7 @@ public class ProcesInterakciaAutomat extends Process
 	public void processStart(MessageForm message)
 	{
 		message.setCode(Mc.koniecInterakcie);
-		hold(durationInteraction.nextDouble(30.0,120.0), message);
+		hold(durationInteractionGenerator.nextDouble(30.0,120.0), message);
 	}
 
 	//meta! userInfo="Process messages defined in code", id="0"

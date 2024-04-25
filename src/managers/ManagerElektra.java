@@ -58,10 +58,10 @@ public class ManagerElektra extends Manager
 	//meta! sender="AgentAutomatu", id="26", type="Response"
 	public void processVydanieListku(MessageForm message)
 	{
-		message.setCode(Mc.obsluhaZakaznika);
-		message.setAddressee(mySim().findAgent(Id.agentModelu));
+		message.setCode(Mc.pripravaObjednavky);
+		message.setAddressee(mySim().findAgent(Id.agentObsluznychMiest));
 
-		response(message);
+		request(message);
 	}
 
 	//meta! userInfo="Process messages defined in code", id="0"

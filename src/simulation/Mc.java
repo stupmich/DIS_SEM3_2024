@@ -20,4 +20,6 @@ public class Mc extends IdList
 	// 1..1000 range reserved for user
 	public static final int novyZakaznik = 1;
 	public static final int koniecInterakcie = 2;
+	public static final int koniecDiktovania = 3;
+	public static final int koniecPripravyObjednavky = 4;
 }
