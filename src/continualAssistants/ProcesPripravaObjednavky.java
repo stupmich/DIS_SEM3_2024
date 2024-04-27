@@ -76,6 +76,7 @@ public class ProcesPripravaObjednavky extends Process
 			// order is too big -> worker stays blocked till customer comes back
 			customer.setBlockingWorker(((MyMessage)message).getWorker());
 			customer.setSizeOfOrder(Customer.SizeOfOrder.BIG);
+			customer.setSizeOfOrder(Customer.SizeOfOrder.REGULAR);
 		} else {
 			customer.setSizeOfOrder(Customer.SizeOfOrder.REGULAR);
 		}

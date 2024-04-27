@@ -1,7 +1,9 @@
 package agents;
 
+import Entities.Customer;
 import Entities.Worker;
 import OSPABA.*;
+import OSPDataStruct.SimQueue;
 import simulation.*;
 import managers.*;
 import continualAssistants.*;
@@ -14,11 +16,13 @@ public class AgentPokladni extends Agent
 	private int highestWorkersPaymentID;
 	private LinkedList<Worker> workersPayment;
 	private LinkedList<Worker> workersPaymentWorking;
+	private SimQueue<SimQueue< MessageForm >> queuesCustomersWaitingForPayment;
 
 	public AgentPokladni(int id, Simulation mySim, Agent parent)
 	{
 		super(id, mySim, parent);
 		init();
+		addOwnMessage(Mc.koniecPlatby);
 	}
 
 	@Override
@@ -34,6 +38,11 @@ public class AgentPokladni extends Agent
 			Worker worker = new Worker(this.highestWorkersPaymentID, Worker.WorkerType.PAYMENT, mySim());
 			workersPayment.add(worker);
 			this.highestWorkersPaymentID++;
+		}
+
+		this.queuesCustomersWaitingForPayment = new SimQueue<SimQueue<MessageForm>>();
+		for (int i = 0; i < ((MySimulation)mySim()).getNumberOfWorkersPayment(); i++) {
+			this.queuesCustomersWaitingForPayment.add(new SimQueue<MessageForm>());
 		}
 	}
 
@@ -54,5 +63,9 @@ public class AgentPokladni extends Agent
 
 	public LinkedList<Worker> getWorkersPaymentWorking() {
 		return workersPaymentWorking;
+	}
+
+	public SimQueue<SimQueue<MessageForm>> getQueuesCustomersWaitingForPayment() {
+		return queuesCustomersWaitingForPayment;
 	}
 }

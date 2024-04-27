@@ -38,6 +38,7 @@ public class AgentAutomatu extends Agent
 		new ManagerAutomatu(Id.managerAutomatu, mySim(), this);
 		new ProcesInterakciaAutomat(Id.procesInterakciaAutomat, mySim(), this);
 		addOwnMessage(Mc.dajPocetMiestVCakarni);
+		addOwnMessage(Mc.uvolniloSaMiesto);
 		addOwnMessage(Mc.vydanieListku);
 	}
 	//meta! tag="end"

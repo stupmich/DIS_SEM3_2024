@@ -26,6 +26,7 @@ public class AgentObsluznychMiest extends Agent
 		init();
 		addOwnMessage(Mc.koniecDiktovania);
 		addOwnMessage(Mc.koniecPripravyObjednavky);
+		addOwnMessage(Mc.koniecVyzdvihnutiaVelkejObjednavky);
 	}
 
 	@Override
@@ -58,8 +59,8 @@ public class AgentObsluznychMiest extends Agent
 	private void init()
 	{
 		new ManagerObsluznychMiest(Id.managerObsluznychMiest, mySim(), this);
-		new ProcesVyzdvihnutieVelkehoTovaru(Id.procesVyzdvihnutieVelkehoTovaru, mySim(), this);
 		new ProcesPripravaObjednavky(Id.procesPripravaObjednavky, mySim(), this);
+		new ProcesVyzdvihnutieVelkehoTovaru(Id.procesVyzdvihnutieVelkehoTovaru, mySim(), this);
 		new ProcesDiktovanieObjednavky(Id.procesDiktovanieObjednavky, mySim(), this);
 		addOwnMessage(Mc.jeCasObedu);
 		addOwnMessage(Mc.pripravaObjednavky);

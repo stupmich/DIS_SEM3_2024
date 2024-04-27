@@ -25,12 +25,12 @@ public class ManagerObsluznychMiest extends Manager {
         }
     }
 
-    //meta! sender="AgentElektra", id="21", type="Notice"
-    public void processJeCasObedu(MessageForm message) {
+	//meta! sender="AgentElektra", id="21", type="Notice"
+	public void processJeCasObedu(MessageForm message) {
     }
 
-    //meta! sender="AgentElektra", id="27", type="Request"
-    public void processPripravaObjednavky(MessageForm message) {
+	//meta! sender="AgentElektra", id="27", type="Request"
+	public void processPripravaObjednavky(MessageForm message) {
         Customer customer = ((MyMessage) message).getCustomer();
         customer.setStartTimeWaitingService(mySim().currentTime());
 
@@ -71,12 +71,12 @@ public class ManagerObsluznychMiest extends Manager {
         }
     }
 
-    //meta! sender="AgentElektra", id="30", type="Request"
-    public void processVyzdvihnutieVelkejObjednavky(MessageForm message) {
+	//meta! sender="AgentElektra", id="30", type="Request"
+	public void processVyzdvihnutieVelkejObjednavky(MessageForm message) {
     }
 
-    //meta! sender="ProcesPripravaObjednavky", id="47", type="Finish"
-    public void processFinishProcesPripravaObjednavky(MessageForm message) {
+	//meta! sender="ProcesPripravaObjednavky", id="47", type="Finish"
+	public void processFinishProcesPripravaObjednavky(MessageForm message) {
         Customer customer = ((MyMessage)message).getCustomer();
         Worker worker = ((MyMessage)message).getWorker();
         boolean newFreePlace = false;
@@ -108,6 +108,7 @@ public class ManagerObsluznychMiest extends Manager {
                     worker.setCustomer(nextCustomerMessageNormal.getCustomer());
 
 //                    MyMessage nextMessage = new MyMessage(((MyMessage)message));
+                    nextCustomerMessageNormal.setWorker(worker);
                     nextCustomerMessageNormal.setCode(Mc.pripravaObjednavky);
                     nextCustomerMessageNormal.setAddressee(myAgent().findAssistant(Id.procesDiktovanieObjednavky));
                     startContinualAssistant(nextCustomerMessageNormal);
@@ -141,6 +142,7 @@ public class ManagerObsluznychMiest extends Manager {
                     worker.setCustomer(nextMessageCustomerOnline.getCustomer());
 
 //                    MyMessage nextMessage = new MyMessage(((MyMessage)message));
+                    nextMessageCustomerOnline.setWorker(worker);
                     nextMessageCustomerOnline.setCode(Mc.pripravaObjednavky);
                     nextMessageCustomerOnline.setAddressee(myAgent().findAssistant(Id.procesPripravaObjednavky));
                     startContinualAssistant(nextMessageCustomerOnline);
@@ -158,18 +160,9 @@ public class ManagerObsluznychMiest extends Manager {
                 //            TODO uvolnilo sa miesto zacni novu interakciu s automatom, ale ako uhmmmm
                 //            notice uvolnilo sa miesto -> agentautomatu
 
-//                if (!myAgent().is_isOccupied() && ((MyMessage)message).getNumberOfFreePlacesWaitingRoom() > 0
-//                     && myAgent().get_queueCustomersTicketDispenser().size > 0) {
-//                    MyMessage nextMessage = (MyMessage)myAgent().get_queueCustomersTicketDispenser().dequeue();
-////				nextMessage.setCelkoveCakanie(mySim().currentTime() - nextMessage.zaciatokCakania());
-//                    startInteractionWithTicketDispenser(nextMessage);
-//                } else {
-//                    System.out.println("uhmm"); // nothing should happen, customer is waiting but there are no free places
-//                    // or ticket dispenser is in use (should not be in this case tbh)
-//                }
-
             MyMessage nextMessage = new MyMessage(mySim());
-            nextMessage.setCode(Mc.dajPocetMiestVCakarni);
+            nextMessage.setNumberOfFreePlacesWaitingRoom(9 - myAgent().getCustomersWaitingInShopBeforeOrder().size());
+            nextMessage.setCode(Mc.uvolniloSaMiesto);
             nextMessage.setAddressee(mySim().findAgent(Id.agentElektra));
 
             notice(nextMessage);
@@ -180,24 +173,24 @@ public class ManagerObsluznychMiest extends Manager {
         response(message);
     }
 
-    //meta! sender="ProcesDiktovanieObjednavky", id="51", type="Finish"
-    public void processFinishProcesDiktovanieObjednavky(MessageForm message) {
+	//meta! sender="ProcesDiktovanieObjednavky", id="51", type="Finish"
+	public void processFinishProcesDiktovanieObjednavky(MessageForm message) {
         message.setAddressee(myAgent().findAssistant(Id.procesPripravaObjednavky));
         startContinualAssistant(message);
     }
 
-    //meta! sender="ProcesVyzdvihnutieVelkehoTovaru", id="49", type="Finish"
-    public void processFinishProcesVyzdvihnutieVelkehoTovaru(MessageForm message) {
+	//meta! sender="ProcesVyzdvihnutieVelkehoTovaru", id="49", type="Finish"
+	public void processFinishProcesVyzdvihnutieVelkehoTovaru(MessageForm message) {
     }
 
-    //meta! userInfo="Process messages defined in code", id="0"
-    public void processDefault(MessageForm message) {
+	//meta! userInfo="Process messages defined in code", id="0"
+	public void processDefault(MessageForm message) {
         switch (message.code()) {
         }
     }
 
-    //meta! sender="AgentElektra", id="57", type="Request"
-    public void processDajPocetMiestVCakarni(MessageForm message) {
+	//meta! sender="AgentElektra", id="57", type="Request"
+	public void processDajPocetMiestVCakarni(MessageForm message) {
         message.setCode(Mc.dajPocetMiestVCakarni);
         message.setAddressee(mySim().findAgent(Id.agentElektra));
         ((MyMessage) message).setNumberOfFreePlacesWaitingRoom(9 - myAgent().getCustomersWaitingInShopBeforeOrder().size());
@@ -205,51 +198,55 @@ public class ManagerObsluznychMiest extends Manager {
         response(message);
     }
 
-    //meta! userInfo="Generated code: do not modify", tag="begin"
-    public void init() {
-    }
+	//meta! userInfo="Generated code: do not modify", tag="begin"
+	public void init()
+	{
+	}
 
-    @Override
-    public void processMessage(MessageForm message) {
-        switch (message.code()) {
-            case Mc.dajPocetMiestVCakarni:
-                processDajPocetMiestVCakarni(message);
-                break;
+	@Override
+	public void processMessage(MessageForm message)
+	{
+		switch (message.code())
+		{
+		case Mc.vyzdvihnutieVelkejObjednavky:
+			processVyzdvihnutieVelkejObjednavky(message);
+		break;
 
-            case Mc.pripravaObjednavky:
-                processPripravaObjednavky(message);
-                break;
+		case Mc.finish:
+			switch (message.sender().id())
+			{
+			case Id.procesPripravaObjednavky:
+				processFinishProcesPripravaObjednavky(message);
+			break;
 
-            case Mc.vyzdvihnutieVelkejObjednavky:
-                processVyzdvihnutieVelkejObjednavky(message);
-                break;
+			case Id.procesDiktovanieObjednavky:
+				processFinishProcesDiktovanieObjednavky(message);
+			break;
 
-            case Mc.finish:
-                switch (message.sender().id()) {
-                    case Id.procesVyzdvihnutieVelkehoTovaru:
-                        processFinishProcesVyzdvihnutieVelkehoTovaru(message);
-                        break;
+			case Id.procesVyzdvihnutieVelkehoTovaru:
+				processFinishProcesVyzdvihnutieVelkehoTovaru(message);
+			break;
+			}
+		break;
 
-                    case Id.procesDiktovanieObjednavky:
-                        processFinishProcesDiktovanieObjednavky(message);
-                        break;
+		case Mc.dajPocetMiestVCakarni:
+			processDajPocetMiestVCakarni(message);
+		break;
 
-                    case Id.procesPripravaObjednavky:
-                        processFinishProcesPripravaObjednavky(message);
-                        break;
-                }
-                break;
+		case Mc.jeCasObedu:
+			processJeCasObedu(message);
+		break;
 
-            case Mc.jeCasObedu:
-                processJeCasObedu(message);
-                break;
+		case Mc.pripravaObjednavky:
+			processPripravaObjednavky(message);
+		break;
 
-            default:
-                processDefault(message);
-                break;
-        }
-    }
-    //meta! tag="end"
+		default:
+			processDefault(message);
+		break;
+		}
+	}
+	//meta! tag="end"
 
     @Override
     public AgentObsluznychMiest myAgent() {

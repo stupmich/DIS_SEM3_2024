@@ -63,12 +63,12 @@ public class ManagerPokladni extends Manager
 			processPlatenie(message);
 		break;
 
-		case Mc.finish:
-			processFinish(message);
-		break;
-
 		case Mc.jeCasObedu:
 			processJeCasObedu(message);
+		break;
+
+		case Mc.finish:
+			processFinish(message);
 		break;
 
 		default:

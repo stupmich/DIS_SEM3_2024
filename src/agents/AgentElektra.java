@@ -27,10 +27,11 @@ public class AgentElektra extends Agent
 		new ManagerElektra(Id.managerElektra, mySim(), this);
 		addOwnMessage(Mc.jeCasObedu);
 		addOwnMessage(Mc.pripravaObjednavky);
-		addOwnMessage(Mc.dajPocetMiestVCakarni);
 		addOwnMessage(Mc.obsluhaZakaznika);
+		addOwnMessage(Mc.dajPocetMiestVCakarni);
 		addOwnMessage(Mc.vyzdvihnutieVelkejObjednavky);
 		addOwnMessage(Mc.platenie);
+		addOwnMessage(Mc.uvolniloSaMiesto);
 		addOwnMessage(Mc.vydanieListku);
 	}
 	//meta! tag="end"

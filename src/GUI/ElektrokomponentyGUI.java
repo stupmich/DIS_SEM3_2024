@@ -5,6 +5,7 @@ import OSPABA.ISimDelegate;
 import OSPABA.MessageForm;
 import OSPABA.SimState;
 import OSPABA.Simulation;
+import OSPDataStruct.SimQueue;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -254,7 +255,7 @@ public class ElektrokomponentyGUI extends JFrame implements ActionListener, ISim
             this.pauseButtonGraph.setEnabled(false);
             this.endButtonGraph.setEnabled(false);
 
-            simulation = new MySimulation(Integer.parseInt(textFieldOrderPlacesTurbo.getText()), Integer.parseInt(textFieldCashTurbo.getText()));
+            simulation = new MySimulation(Integer.parseInt(textFieldOrderPlacesWatchTime.getText()), Integer.parseInt(textFieldCashWatchTime.getText()));
             simulation.registerDelegate(this);
             this.simulation.onReplicationWillStart((sim)
                     ->{
@@ -262,18 +263,6 @@ public class ElektrokomponentyGUI extends JFrame implements ActionListener, ISim
             });
 
             simulation.simulateAsync(Integer.parseInt(textFieldReplications.getText()), Config.simEndTime);
-
-//            for (Worker worker : simulation.agentObsluznychMiest().getWorkersOrderNormal()) {
-//                modelWorkersOrder.addRow(new Object[]{worker.getId(), worker.getType(), "Free"});
-//            }
-//
-//            for (Worker worker : simulation.agentObsluznychMiest().getWorkersOrderOnline()) {
-//                modelWorkersOrder.addRow(new Object[]{worker.getId(), worker.getType(), "Free"});
-//            }
-//
-//            for (Worker worker : simulation.agentPokladni().getWorkersPayment()) {
-//                modelWorkersPayment.addRow(new Object[]{worker.getId(), worker.getType(), "Free"});
-//            }
 
         } else if (e.getSource() == pauseWatchTimeButton) {
             if (simulation.isPaused()) {
@@ -487,19 +476,19 @@ public class ElektrokomponentyGUI extends JFrame implements ActionListener, ISim
                             modelCustomerTicketDispenser.addRow(new Object[]{((MyMessage)mess).getCustomer().getId()});
                         }
 
-//                        modelCustomersWaitingOrder.setRowCount(0);
-//                        for (Customer customer : simulation.getCustomersWaitingInShopBeforeOrder()) {
-//                            modelCustomersWaitingOrder.addRow(new Object[]{customer.getId(), customer.getCustomerType(), customer.getTimeArrival()});
-//                        }
-//
-//                        modelCustomersPayment.setRowCount(0);
-//                        int index = 0;
-//                        for (LinkedList<Customer> queue : simulation.getQueuesCustomersWaitingForPayment()) {
-//                            for (Customer customer : queue) {
-//                                modelCustomersPayment.addRow(new Object[]{((Customer) customer).getId(), Integer.toString(index)});
-//                            }
-//                            index++;
-//                        }
+                        modelCustomersWaitingOrder.setRowCount(0);
+                        for (MessageForm mess : ((MySimulation) simulation).agentObsluznychMiest().getCustomersWaitingInShopBeforeOrder()) {
+                            modelCustomersWaitingOrder.addRow(new Object[]{((MyMessage)mess).getCustomer().getId(), ((MyMessage)mess).getCustomer().getCustomerType(), ((MyMessage)mess).getCustomer().getTimeArrival()});
+                        }
+
+                        modelCustomersPayment.setRowCount(0);
+                        int index = 0;
+                        for (SimQueue<MessageForm> queue : ((MySimulation) simulation).agentPokladni().getQueuesCustomersWaitingForPayment()) {
+                            for (MessageForm mess : queue) {
+                                modelCustomersPayment.addRow(new Object[]{((MyMessage)mess).getCustomer().getId(), Integer.toString(index)});
+                            }
+                            index++;
+                        }
 
                     }
                 });

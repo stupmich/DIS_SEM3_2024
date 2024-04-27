@@ -34,6 +34,10 @@ public class ManagerElektra extends Manager
 	//meta! sender="AgentObsluznychMiest", id="27", type="Response"
 	public void processPripravaObjednavky(MessageForm message)
 	{
+		message.setCode(Mc.obsluhaZakaznika);
+		message.setAddressee(mySim().findAgent(Id.agentModelu));
+
+		response(message);
 	}
 
 	//meta! sender="AgentModelu", id="15", type="Request"
@@ -86,6 +90,13 @@ public class ManagerElektra extends Manager
 		request(message);
 	}
 
+	//meta! sender="AgentObsluznychMiest", id="59", type="Notice"
+	public void processUvolniloSaMiesto(MessageForm message)
+	{
+		message.setAddressee(mySim().findAgent(Id.agentAutomatu));
+		notice(message);
+	}
+
 	//meta! userInfo="Generated code: do not modify", tag="begin"
 	public void init()
 	{
@@ -96,8 +107,16 @@ public class ManagerElektra extends Manager
 	{
 		switch (message.code())
 		{
-		case Mc.vydanieListku:
-			processVydanieListku(message);
+		case Mc.platenie:
+			processPlatenie(message);
+		break;
+
+		case Mc.vyzdvihnutieVelkejObjednavky:
+			processVyzdvihnutieVelkejObjednavky(message);
+		break;
+
+		case Mc.obsluhaZakaznika:
+			processObsluhaZakaznika(message);
 		break;
 
 		case Mc.dajPocetMiestVCakarni:
@@ -113,24 +132,20 @@ public class ManagerElektra extends Manager
 			}
 		break;
 
-		case Mc.pripravaObjednavky:
-			processPripravaObjednavky(message);
-		break;
-
-		case Mc.platenie:
-			processPlatenie(message);
-		break;
-
-		case Mc.obsluhaZakaznika:
-			processObsluhaZakaznika(message);
-		break;
-
 		case Mc.jeCasObedu:
 			processJeCasObedu(message);
 		break;
 
-		case Mc.vyzdvihnutieVelkejObjednavky:
-			processVyzdvihnutieVelkejObjednavky(message);
+		case Mc.vydanieListku:
+			processVydanieListku(message);
+		break;
+
+		case Mc.pripravaObjednavky:
+			processPripravaObjednavky(message);
+		break;
+
+		case Mc.uvolniloSaMiesto:
+			processUvolniloSaMiesto(message);
 		break;
 
 		default:

@@ -1,6 +1,8 @@
 package continualAssistants;
 
 import OSPABA.*;
+import OSPRNG.UniformContinuousRNG;
+import OSPRNG.UniformDiscreteRNG;
 import simulation.*;
 import agents.*;
 import OSPABA.Process;
@@ -8,9 +10,11 @@ import OSPABA.Process;
 //meta! id="48"
 public class ProcesVyzdvihnutieVelkehoTovaru extends Process
 {
+	private static UniformContinuousRNG durationBigOrderPickUpGenerator;
 	public ProcesVyzdvihnutieVelkehoTovaru(int id, Simulation mySim, CommonAgent myAgent)
 	{
 		super(id, mySim, myAgent);
+		durationBigOrderPickUpGenerator = new UniformContinuousRNG(30.0,70.0,((MySimulation)mySim()).getSeedGenerator());
 	}
 
 	@Override
@@ -23,6 +27,8 @@ public class ProcesVyzdvihnutieVelkehoTovaru extends Process
 	//meta! sender="AgentObsluznychMiest", id="49", type="Start"
 	public void processStart(MessageForm message)
 	{
+		message.setCode(Mc.koniecVyzdvihnutiaVelkejObjednavky);
+		hold(durationBigOrderPickUpGenerator.sample(), message);
 	}
 
 	//meta! userInfo="Process messages defined in code", id="0"
@@ -30,6 +36,9 @@ public class ProcesVyzdvihnutieVelkehoTovaru extends Process
 	{
 		switch (message.code())
 		{
+			case Mc.koniecVyzdvihnutiaVelkejObjednavky:
+				assistantFinished(message);
+				break;
 		}
 	}
 
