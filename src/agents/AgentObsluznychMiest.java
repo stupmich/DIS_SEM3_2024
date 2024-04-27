@@ -24,6 +24,8 @@ public class AgentObsluznychMiest extends Agent
 	{
 		super(id, mySim, parent);
 		init();
+		addOwnMessage(Mc.koniecDiktovania);
+		addOwnMessage(Mc.koniecPripravyObjednavky);
 	}
 
 	@Override

@@ -43,6 +43,7 @@ public class ManagerAutomatu extends Manager
 			request(nextMessage);
 		}
 
+		// TODO pravdepodobne problem mozno skusit dat pred request
 		message.setCode(Mc.vydanieListku);
 		response(message);
 	}

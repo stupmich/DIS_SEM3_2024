@@ -45,6 +45,7 @@ public class ManagerObsluznychMiest extends Manager {
                 //myAgent().getAverageUsePercentOrderNormalStat().updateStatistics(core, myAgent().getWorkersOrderWorkingNormal());
                 myAgent().getWorkersOrderWorkingNormal().add(worker);
 
+                ((MyMessage) message).setWorker(worker);
                 message.setAddressee(myAgent().findAssistant(Id.procesDiktovanieObjednavky));
                 startContinualAssistant(message);
             } else {
@@ -61,6 +62,7 @@ public class ManagerObsluznychMiest extends Manager {
 //                myAgent().getAverageUsePercentOrderOnlineStat().updateStatistics(core, myAgent().getWorkersOrderWorkingOnline());
                 myAgent().getWorkersOrderWorkingOnline().add(worker);
 
+                ((MyMessage) message).setWorker(worker);
                 message.setAddressee(myAgent().findAssistant(Id.procesPripravaObjednavky));
                 startContinualAssistant(message);
             } else {
@@ -83,32 +85,32 @@ public class ManagerObsluznychMiest extends Manager {
         {
             // Customer picked up order -> worker is free again and can serve another customer
             if (customer.getCustomerType() == Customer.CustomerType.REGULAR || customer.getCustomerType() == Customer.CustomerType.CONTRACT) {
-                Customer nextCustomerNormal = null;
+                MyMessage nextCustomerMessageNormal = null;
 
                 for (MessageForm m : myAgent().getCustomersWaitingInShopBeforeOrder()) {
                     MyMessage messInQueue = ((MyMessage) m);
                     Customer customerInQueue = messInQueue.getCustomer();
 
                     if (customerInQueue.getCustomerType() == Customer.CustomerType.CONTRACT) {
-                        nextCustomerNormal = customerInQueue;
+                        nextCustomerMessageNormal = messInQueue;
                         break;
                     }
 
-                    if (customerInQueue.getCustomerType() == Customer.CustomerType.REGULAR && nextCustomerNormal == null) {
-                        nextCustomerNormal = customerInQueue;
+                    if (customerInQueue.getCustomerType() == Customer.CustomerType.REGULAR && nextCustomerMessageNormal == null) {
+                        nextCustomerMessageNormal = messInQueue;
                     }
                 }
 
-                if (nextCustomerNormal != null) {
+                if (nextCustomerMessageNormal != null) {
                     newFreePlace = true;
-                    myAgent().getCustomersWaitingInShopBeforeOrder().remove(nextCustomerNormal);
-                    worker.setIdCustomer(nextCustomerNormal.getId());
-                    worker.setCustomer(nextCustomerNormal);
+                    myAgent().getCustomersWaitingInShopBeforeOrder().remove(nextCustomerMessageNormal);
+                    worker.setIdCustomer(nextCustomerMessageNormal.getCustomer().getId());
+                    worker.setCustomer(nextCustomerMessageNormal.getCustomer());
 
-                    MyMessage nextMessage = new MyMessage(((MyMessage)message));
-                    nextMessage.setCode(Mc.pripravaObjednavky);
-                    message.setAddressee(myAgent().findAssistant(Id.procesDiktovanieObjednavky));
-                    startContinualAssistant(message);
+//                    MyMessage nextMessage = new MyMessage(((MyMessage)message));
+                    nextCustomerMessageNormal.setCode(Mc.pripravaObjednavky);
+                    nextCustomerMessageNormal.setAddressee(myAgent().findAssistant(Id.procesDiktovanieObjednavky));
+                    startContinualAssistant(nextCustomerMessageNormal);
                     
                 } else { // no new customer -> worker is free
                     worker.setIdCustomer(-1);
@@ -120,28 +122,28 @@ public class ManagerObsluznychMiest extends Manager {
                 }
 
             } else {
-                Customer nextOnlineCustomer = null;
+                MyMessage nextMessageCustomerOnline = null;
 
                 for (MessageForm m : myAgent().getCustomersWaitingInShopBeforeOrder()) {
                     MyMessage messInQueue = ((MyMessage) m);
                     Customer customerInQueue = messInQueue.getCustomer();
 
                     if (customerInQueue.getCustomerType() == Customer.CustomerType.ONLINE) {
-                        nextOnlineCustomer = customerInQueue;
+                        nextMessageCustomerOnline = messInQueue;
                         break;
                     }
                 }
 
-                if (nextOnlineCustomer != null) {
+                if (nextMessageCustomerOnline != null) {
                     newFreePlace = true;
-                    myAgent().getCustomersWaitingInShopBeforeOrder().remove(nextOnlineCustomer);
-                    worker.setIdCustomer(nextOnlineCustomer.getId());
-                    worker.setCustomer(nextOnlineCustomer);
+                    myAgent().getCustomersWaitingInShopBeforeOrder().remove(nextMessageCustomerOnline);
+                    worker.setIdCustomer(nextMessageCustomerOnline.getCustomer().getId());
+                    worker.setCustomer(nextMessageCustomerOnline.getCustomer());
 
-                    MyMessage nextMessage = new MyMessage(((MyMessage)message));
-                    nextMessage.setCode(Mc.pripravaObjednavky);
-                    message.setAddressee(myAgent().findAssistant(Id.procesPripravaObjednavky));
-                    startContinualAssistant(message);
+//                    MyMessage nextMessage = new MyMessage(((MyMessage)message));
+                    nextMessageCustomerOnline.setCode(Mc.pripravaObjednavky);
+                    nextMessageCustomerOnline.setAddressee(myAgent().findAssistant(Id.procesPripravaObjednavky));
+                    startContinualAssistant(nextMessageCustomerOnline);
                 } else { // no new customer -> worker is free
                     worker.setIdCustomer(-1);
                     worker.setCustomer(null);
@@ -166,11 +168,11 @@ public class ManagerObsluznychMiest extends Manager {
 //                    // or ticket dispenser is in use (should not be in this case tbh)
 //                }
 
-//            MyMessage nextMessage = new MyMessage(((MyMessage)message));
-//            nextMessage.setCode(Mc.pripravaObjednavky);
-//            nextMessage.setAddressee(mySim().findAgent(Id.agentElektra));
-//
-//            request(nextMessage);
+            MyMessage nextMessage = new MyMessage(mySim());
+            nextMessage.setCode(Mc.dajPocetMiestVCakarni);
+            nextMessage.setAddressee(mySim().findAgent(Id.agentElektra));
+
+            notice(nextMessage);
             }
         }
 
