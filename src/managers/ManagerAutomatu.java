@@ -28,6 +28,10 @@ public class ManagerAutomatu extends Manager {
         myAgent().get_customerInteractingWithTicketDispenser().remove(message);
         //myAgent().casCakania().addSample(((MyMessage)message).celkoveCakanie());
 
+        // TODO sus daj pozor
+        message.setCode(Mc.vydanieListku);
+        response(message);
+
         if (myAgent().get_queueCustomersTicketDispenser().size() > 0) {
             MyMessage nextMessage = new MyMessage(((MyMessage) message));
             nextMessage.setPickNextFromQueueTicketDispenser(true);
@@ -36,10 +40,6 @@ public class ManagerAutomatu extends Manager {
 
             request(nextMessage);
         }
-
-        // TODO pravdepodobne problem mozno skusit dat pred request
-        message.setCode(Mc.vydanieListku);
-        response(message);
     }
 
     //meta! sender="AgentElektra", id="26", type="Request"
@@ -73,7 +73,7 @@ public class ManagerAutomatu extends Manager {
 //				nextMessage.setCelkoveCakanie(mySim().currentTime() - nextMessage.zaciatokCakania());
                 startInteractionWithTicketDispenser(nextMessage);
             } else {
-                System.out.println("uhmm"); // nothing should happen, customer is waiting but there are no free places
+                System.out.println("uhmm"  + mySim().currentTime()); // nothing should happen, customer is waiting but there are no free places
                 // or ticket dispenser is in use (should not be in this case tbh)
             }
         }
@@ -87,7 +87,7 @@ public class ManagerAutomatu extends Manager {
 //				nextMessage.setCelkoveCakanie(mySim().currentTime() - nextMessage.zaciatokCakania());
             startInteractionWithTicketDispenser(nextMessage);
         } else {
-            System.out.println("uhmm"); // nothing should happen, customer is waiting but there are no free places
+            System.out.println("uhmm" + mySim().currentTime()); // nothing should happen, customer is waiting but there are no free places
             // or ticket dispenser is in use (should not be in this case tbh)
         }
     }

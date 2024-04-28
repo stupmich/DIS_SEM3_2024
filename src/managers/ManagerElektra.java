@@ -1,5 +1,6 @@
 package managers;
 
+import Entities.Customer;
 import OSPABA.*;
 import simulation.*;
 import agents.*;
@@ -34,10 +35,10 @@ public class ManagerElektra extends Manager
 	//meta! sender="AgentObsluznychMiest", id="27", type="Response"
 	public void processPripravaObjednavky(MessageForm message)
 	{
-		message.setCode(Mc.obsluhaZakaznika);
-		message.setAddressee(mySim().findAgent(Id.agentModelu));
+		message.setCode(Mc.platenie);
+		message.setAddressee(mySim().findAgent(Id.agentPokladni));
 
-		response(message);
+		request(message);
 	}
 
 	//meta! sender="AgentModelu", id="15", type="Request"
@@ -52,11 +53,22 @@ public class ManagerElektra extends Manager
 	//meta! sender="AgentObsluznychMiest", id="30", type="Response"
 	public void processVyzdvihnutieVelkejObjednavky(MessageForm message)
 	{
+		message.setCode(Mc.obsluhaZakaznika);
+		response(message);
 	}
 
 	//meta! sender="AgentPokladni", id="29", type="Response"
 	public void processPlatenie(MessageForm message)
 	{
+		if (((MyMessage)message).getCustomer().getSizeOfOrder() == Customer.SizeOfOrder.REGULAR) {
+			message.setCode(Mc.obsluhaZakaznika);
+			response(message);
+		} else {
+			message.setCode(Mc.vyzdvihnutieVelkejObjednavky);
+			((MyMessage)message).setWorker(((MyMessage)message).getCustomer().getBlockingWorker());
+			message.setAddressee(mySim().findAgent(Id.agentObsluznychMiest));
+			request(message);
+		}
 	}
 
 	//meta! sender="AgentAutomatu", id="26", type="Response"

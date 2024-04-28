@@ -80,9 +80,6 @@ public class ManagerOkolia extends Manager
 	public void processOdchodZakaznika(MessageForm message)
 	{
 		myAgent().incCountCustomersOut();
-		System.out.println("odisiel");
-		System.out.println("in " + myAgent().getCountCustomersIn() );
-		System.out.println("out " + myAgent().getCountCustomersOut());
 	}
 
 	//meta! userInfo="Process messages defined in code", id="0"

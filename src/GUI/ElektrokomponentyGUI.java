@@ -480,6 +480,9 @@ public class ElektrokomponentyGUI extends JFrame implements ActionListener, ISim
                         for (MessageForm mess : ((MySimulation) simulation).agentObsluznychMiest().getCustomersWaitingInShopBeforeOrder()) {
                             modelCustomersWaitingOrder.addRow(new Object[]{((MyMessage)mess).getCustomer().getId(), ((MyMessage)mess).getCustomer().getCustomerType(), ((MyMessage)mess).getCustomer().getTimeArrival()});
                         }
+                        if(((MySimulation) simulation).agentObsluznychMiest().getCustomersWaitingInShopBeforeOrder().size() > 9) {
+                            System.out.println(((MySimulation) simulation).agentObsluznychMiest().getCustomersWaitingInShopBeforeOrder().size());
+                        }
 
                         modelCustomersPayment.setRowCount(0);
                         int index = 0;
