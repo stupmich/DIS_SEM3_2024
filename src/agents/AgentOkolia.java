@@ -1,6 +1,7 @@
 package agents;
 
 import OSPABA.*;
+import OSPStat.Stat;
 import simulation.*;
 import managers.*;
 import continualAssistants.*;
@@ -11,6 +12,7 @@ public class AgentOkolia extends Agent
 	private int countCustomersIn;
 	private int countCustomersOut;
 	private int highestCustomerID;
+	private Stat timeInSystemStat;
 
 	public AgentOkolia(int id, Simulation mySim, Agent parent)
 	{
@@ -27,6 +29,8 @@ public class AgentOkolia extends Agent
 		this.countCustomersIn = 0;
 		this.countCustomersOut = 0;
 		this.highestCustomerID = 0;
+
+		timeInSystemStat = new Stat();
 	}
 
 	//meta! userInfo="Generated code: do not modify", tag="begin"
@@ -45,6 +49,7 @@ public class AgentOkolia extends Agent
 	public void incCountCustomersIn() {
 		this.countCustomersIn++;
 	}
+
 	public void incCountCustomersOut() {
 		this.countCustomersOut++;
 	}
@@ -63,5 +68,9 @@ public class AgentOkolia extends Agent
 
 	public void incHighestCustomerID() {
 		this.highestCustomerID++;
+	}
+
+	public Stat getTimeInSystemStat() {
+		return timeInSystemStat;
 	}
 }

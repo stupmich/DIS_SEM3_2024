@@ -1,5 +1,6 @@
 package managers;
 
+import Entities.Customer;
 import OSPABA.*;
 import simulation.*;
 import agents.*;
@@ -79,7 +80,16 @@ public class ManagerOkolia extends Manager
 	//meta! sender="AgentModelu", id="14", type="Notice"
 	public void processOdchodZakaznika(MessageForm message)
 	{
+		Customer leavingCustomer = ((MyMessage)message).getCustomer();
+		leavingCustomer.setTimeLeaveSystem(mySim().currentTime());
+
+//		((Sem2) core).setLastCustomer(customer);
 		myAgent().incCountCustomersOut();
+//		((Sem2) core).incServedCustomers();
+//		((Sem2) core).getAllCustomers().remove(customer);
+
+		double timeInSystem = leavingCustomer.getTimeLeaveSystem() - leavingCustomer.getTimeArrival();
+		myAgent().getTimeInSystemStat().addSample(timeInSystem);
 	}
 
 	//meta! userInfo="Process messages defined in code", id="0"

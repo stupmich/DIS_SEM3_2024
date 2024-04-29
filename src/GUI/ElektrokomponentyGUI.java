@@ -224,8 +224,9 @@ public class ElektrokomponentyGUI extends JFrame implements ActionListener, ISim
                     ->{
                 this.changeSpeed(this.simulation);
             });
+            this.simulation.onReplicationDidFinish(sim -> refresh(sim));
 
-            this.simulation.simulateAsync(Integer.parseInt(textFieldReplications.getText()), Config.simEndTime);
+            this.simulation.simulateAsync(Integer.parseInt(textFieldReplicationsTurbo.getText()), Config.simEndTime);
 
         } else if (e.getSource() == pauseTurboButton) {
             if (simulation.isPaused()) {
@@ -373,12 +374,12 @@ public class ElektrokomponentyGUI extends JFrame implements ActionListener, ISim
     @Override
     public void refresh(Simulation simulation) {
         if (turboMode) {
-//            this.executedReplicationsTurbo.setText(Integer.toString(simulation.getExecutedReplications()));
+            this.executedReplicationsTurbo.setText(Integer.toString(((MySimulation) simulation).currentReplication()));
 //            this.confIntervalTimeInSystemTurbo.setText("<" + String.format("%.3f", simulation.getConfIntTimeInSystemLower() / 60.0)
 //                    + " ; " + String.format("%.3f", simulation.getConfIntTimeInSystemUpper() / 60.0)
 //                    + ">");
-//            this.averageTimeSystemTurbo.setText(String.format("%.3f", simulation.getAverageTimeInSystem()) + " sekúnd / " + String.format("%.3f", simulation.getAverageTimeInSystem() / 60.0) + " minút");
-//            this.averageNumberServedCustomersTurbo.setText(String.format("%.3f", simulation.getAverageServedCustomer()));
+            this.averageTimeSystemTurbo.setText(String.format("%.3f", ((MySimulation) simulation).getTimeInSystemStat().mean()) + " sekúnd / " + String.format("%.3f", ((MySimulation) simulation).getTimeInSystemStat().mean() / 60.0) + " minút");
+            //            this.averageNumberServedCustomersTurbo.setText(String.format("%.3f", simulation.getAverageServedCustomer()));
 //            this.averageTimeQueueTicketTurbo.setText(String.format(String.format("%.3f", simulation.getAverageTimeTicket()) + " sekúnd / " + "%.3f", simulation.getAverageTimeTicket() / 60.0) + " minút");
 //            this.averageNumberQueueTicketTurbo.setText(String.format("%.3f", simulation.getAverageNumberOfCustomersWaitingTicket()));
 //            this.averageUsePercTicketTurbo.setText(String.format("%.2f", simulation.getAverageUsePercentTicket()) + "%");
@@ -404,16 +405,16 @@ public class ElektrokomponentyGUI extends JFrame implements ActionListener, ISim
             String timeString = String.format("%d:%02d:%02d", hours, minutes, remainingSeconds);
             this.timeUser.setText(timeString);
 
-//            this.numberWorkersOrderNormal.setText(Integer.toString(simulation.getWorkersOrderNormal().size()));
-//            this.numberWorkersOrderOnline.setText(Integer.toString(simulation.getWorkersOrderOnline().size()));
-//            this.numberWorkersPayment.setText(Integer.toString(simulation.getWorkersPayment().size()));
-//            this.numberCustomersTicket.setText(Integer.toString(simulation.getQueueCustomersWaitingTicketDispenser().size()));
-//            this.numberCustomersQueueService.setText(Integer.toString(simulation.getCustomersWaitingInShopBeforeOrder().size()));
+            this.numberWorkersOrderNormal.setText(Integer.toString(((MySimulation) simulation).agentObsluznychMiest().getWorkersOrderNormal().size()));
+            this.numberWorkersOrderOnline.setText(Integer.toString(((MySimulation) simulation).agentObsluznychMiest().getWorkersOrderOnline().size()));
+            this.numberWorkersPayment.setText(Integer.toString(((MySimulation) simulation).agentPokladni().getWorkersPayment().size()));
+            this.numberCustomersTicket.setText(Integer.toString(((MySimulation) simulation).agentAutomatu().get_queueCustomersTicketDispenser().size()));
+            this.numberCustomersQueueService.setText(Integer.toString(((MySimulation) simulation).agentObsluznychMiest().getCustomersWaitingInShopBeforeOrder().size()));
 
             int numberCustomersPayment = 0;
-//            for (LinkedList<Customer> queue : simulation.getQueuesCustomersWaitingForPayment()) {
-//                numberCustomersPayment += queue.size();
-//            }
+            for (SimQueue<MessageForm> queue : ((MySimulation) simulation).agentPokladni().getQueuesCustomersWaitingForPayment()) {
+                numberCustomersPayment += queue.size();
+            }
             this.numberCustomersPayment.setText(Integer.toString(numberCustomersPayment));
             this.executedReplications.setText(Integer.toString(simulation.currentReplication()));
 
@@ -505,7 +506,7 @@ public class ElektrokomponentyGUI extends JFrame implements ActionListener, ISim
 //                    + " ; " + String.format("%.3f", simulation.getConfIntTimeInSystemUpper() / 60.0)
 //                    + ">");
 //
-//            this.averageTimeSystemWatchTime.setText(String.format("%.3f", simulation.getAverageTimeInSystem()) + " sekúnd / " + String.format("%.3f", simulation.getAverageTimeInSystem() / 60.0) + " minút");
+            this.averageTimeSystemWatchTime.setText(String.format("%.3f", ((MySimulation) simulation).getTimeInSystemStat().mean()) + " sekúnd / " + String.format("%.3f", ((MySimulation) simulation).getTimeInSystemStat().mean() / 60.0) + " minút");
 //            this.averageTimeQueueTicketWatchTime.setText(String.format(String.format("%.3f", simulation.getAverageTimeTicket()) + " sekúnd / " + "%.3f", simulation.getAverageTimeTicket() / 60.0) + " minút");
 //            this.averageNumberServedCustomersWatchTime.setText(String.format("%.3f", simulation.getAverageServedCustomer()));
 //            this.averageNumberQueueTicketWatchTime.setText(String.format("%.3f", simulation.getAverageNumberOfCustomersWaitingTicket()));

@@ -2,6 +2,7 @@ package simulation;
 
 import Entities.Worker;
 import OSPABA.*;
+import OSPStat.Stat;
 import agents.*;
 
 import java.util.LinkedList;
@@ -15,6 +16,7 @@ public class MySimulation extends Simulation
 	private int numberOfOnlineWorkers;
 	private boolean	validationMode = true;
 	private Random seedGenerator;
+	private Stat timeInSystemStat;
 
 	public MySimulation(int numberOfWorkersOrder, int numberOfWorkersPayment)
 	{
@@ -32,6 +34,7 @@ public class MySimulation extends Simulation
 	{
 		super.prepareSimulation();
 		// Create global statistcis
+		timeInSystemStat = new Stat();
 	}
 
 	@Override
@@ -50,6 +53,8 @@ public class MySimulation extends Simulation
 	{
 		// Collect local statistics into global, update UI, etc...
 		super.replicationFinished();
+
+		this.timeInSystemStat.addSample(agentOkolia().getTimeInSystemStat().mean());
 	}
 
 	@Override
@@ -151,5 +156,9 @@ public AgentAutomatu agentAutomatu()
 
 	public int getNumberOfOnlineWorkers() {
 		return numberOfOnlineWorkers;
+	}
+
+	public Stat getTimeInSystemStat() {
+		return timeInSystemStat;
 	}
 }
