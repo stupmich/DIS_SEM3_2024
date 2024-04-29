@@ -52,6 +52,10 @@ public class ManagerModelu extends Manager
 			case Mc.inicializuj:
 				message.setAddressee(mySim().findAgent(Id.agentOkolia));
 				notice(message);
+
+				MyMessage nextMessage = new MyMessage(((MyMessage) message));
+				nextMessage.setAddressee(mySim().findAgent(Id.agentElektra));
+				notice(nextMessage);
 				break;
 		}
 	}

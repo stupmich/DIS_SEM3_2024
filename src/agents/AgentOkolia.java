@@ -1,5 +1,6 @@
 package agents;
 
+import Entities.Customer;
 import OSPABA.*;
 import OSPStat.Stat;
 import simulation.*;
@@ -13,6 +14,7 @@ public class AgentOkolia extends Agent
 	private int countCustomersOut;
 	private int highestCustomerID;
 	private Stat timeInSystemStat;
+	private Customer lastCustomer;
 
 	public AgentOkolia(int id, Simulation mySim, Agent parent)
 	{
@@ -30,6 +32,8 @@ public class AgentOkolia extends Agent
 		this.countCustomersOut = 0;
 		this.highestCustomerID = 0;
 
+		this.lastCustomer = null;
+
 		timeInSystemStat = new Stat();
 	}
 
@@ -37,10 +41,10 @@ public class AgentOkolia extends Agent
 	private void init()
 	{
 		new ManagerOkolia(Id.managerOkolia, mySim(), this);
-		new PlanovacPrichodovOnlineZakaznikov(Id.planovacPrichodovOnlineZakaznikov, mySim(), this);
 		new PlanovacPrichodovBeznychZakaznikov(Id.planovacPrichodovBeznychZakaznikov, mySim(), this);
-		new PlanovacPrichodovZmluvnychZakaznikov(Id.planovacPrichodovZmluvnychZakaznikov, mySim(), this);
+		new PlanovacPrichodovOnlineZakaznikov(Id.planovacPrichodovOnlineZakaznikov, mySim(), this);
 		new PlanovacPrichodovZakaznikovValidMod(Id.planovacPrichodovZakaznikovValidMod, mySim(), this);
+		new PlanovacPrichodovZmluvnychZakaznikov(Id.planovacPrichodovZmluvnychZakaznikov, mySim(), this);
 		addOwnMessage(Mc.inicializuj);
 		addOwnMessage(Mc.odchodZakaznika);
 	}
@@ -72,5 +76,13 @@ public class AgentOkolia extends Agent
 
 	public Stat getTimeInSystemStat() {
 		return timeInSystemStat;
+	}
+
+	public Customer getLastCustomer() {
+		return lastCustomer;
+	}
+
+	public void setLastCustomer(Customer lastCustomer) {
+		this.lastCustomer = lastCustomer;
 	}
 }

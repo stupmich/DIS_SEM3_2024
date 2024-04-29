@@ -22,8 +22,8 @@ public class ManagerAutomatu extends Manager {
         }
     }
 
-    //meta! sender="ProcesInterakciaAutomat", id="44", type="Finish"
-    public void processFinish(MessageForm message) {
+	//meta! sender="ProcesInterakciaAutomat", id="44", type="Finish"
+	public void processFinishProcesInterakciaAutomat(MessageForm message) {
         myAgent().set_isOccupied(false);
         myAgent().get_customerInteractingWithTicketDispenser().remove(message);
         //myAgent().casCakania().addSample(((MyMessage)message).celkoveCakanie());
@@ -42,22 +42,22 @@ public class ManagerAutomatu extends Manager {
         }
     }
 
-    //meta! sender="AgentElektra", id="26", type="Request"
-    public void processVydanieListku(MessageForm message) {
+	//meta! sender="AgentElektra", id="26", type="Request"
+	public void processVydanieListku(MessageForm message) {
         message.setCode(Mc.dajPocetMiestVCakarni);
         message.setAddressee(mySim().findAgent(Id.agentElektra));
 
         request(message);
     }
 
-    //meta! userInfo="Process messages defined in code", id="0"
-    public void processDefault(MessageForm message) {
+	//meta! userInfo="Process messages defined in code", id="0"
+	public void processDefault(MessageForm message) {
         switch (message.code()) {
         }
     }
 
-    //meta! sender="AgentElektra", id="56", type="Response"
-    public void processDajPocetMiestVCakarni(MessageForm message) {
+	//meta! sender="AgentElektra", id="56", type="Response"
+	public void processDajPocetMiestVCakarni(MessageForm message) {
         message.setCode(Mc.vydanieListku);
 
         if (((MyMessage) message).isPickNextFromQueueTicketDispenser() == false) { // New Customer came to ticket dispenser
@@ -79,8 +79,8 @@ public class ManagerAutomatu extends Manager {
         }
     }
 
-    //meta! sender="AgentElektra", id="61", type="Notice"
-    public void processUvolniloSaMiesto(MessageForm message) {
+	//meta! sender="AgentElektra", id="61", type="Notice"
+	public void processUvolniloSaMiesto(MessageForm message) {
         if (!myAgent().is_isOccupied() && ((MyMessage) message).getNumberOfFreePlacesWaitingRoom() > 0
                 && myAgent().get_queueCustomersTicketDispenser().size() > 0) {
             MyMessage nextMessage = (MyMessage) myAgent().get_queueCustomersTicketDispenser().dequeue();
@@ -92,37 +92,69 @@ public class ManagerAutomatu extends Manager {
         }
     }
 
-    //meta! userInfo="Generated code: do not modify", tag="begin"
-    public void init() {
-    }
-
-    // TODO ZATVORIT AUTOMAT O 17:00 SCHEDULER NA 17:00 POSLAT VSETKYCH DO PREC
-
-    @Override
-    public void processMessage(MessageForm message) {
-        switch (message.code()) {
-            case Mc.dajPocetMiestVCakarni:
-                processDajPocetMiestVCakarni(message);
-                break;
-
-            case Mc.vydanieListku:
-                processVydanieListku(message);
-                break;
-
-            case Mc.finish:
-                processFinish(message);
-                break;
-
-            case Mc.uvolniloSaMiesto:
-                processUvolniloSaMiesto(message);
-                break;
-
-            default:
-                processDefault(message);
-                break;
+	//meta! sender="PlanovacZatvoreniaAutomatu", id="65", type="Finish"
+	public void processFinishPlanovacZatvoreniaAutomatu(MessageForm message)
+	{
+        int size = myAgent().get_queueCustomersTicketDispenser().size();
+        for (int i = 0; i < size; i++) {
+            MyMessage nextMessage = (MyMessage) myAgent().get_queueCustomersTicketDispenser().dequeue();
+            nextMessage.getCustomer().setNotServed(true);
+            response(nextMessage);
         }
-    }
-    //meta! tag="end"
+	}
+
+	//meta! sender="AgentElektra", id="70", type="Notice"
+	public void processInicializuj(MessageForm message)
+	{
+        message.setAddressee(myAgent().findAssistant(Id.planovacZatvoreniaAutomatu));
+        startContinualAssistant(message);
+	}
+
+	//meta! userInfo="Generated code: do not modify", tag="begin"
+	public void init()
+	{
+	}
+
+	@Override
+	public void processMessage(MessageForm message)
+	{
+		switch (message.code())
+		{
+		case Mc.uvolniloSaMiesto:
+			processUvolniloSaMiesto(message);
+		break;
+
+		case Mc.dajPocetMiestVCakarni:
+			processDajPocetMiestVCakarni(message);
+		break;
+
+		case Mc.vydanieListku:
+			processVydanieListku(message);
+		break;
+
+		case Mc.inicializuj:
+			processInicializuj(message);
+		break;
+
+		case Mc.finish:
+			switch (message.sender().id())
+			{
+			case Id.planovacZatvoreniaAutomatu:
+				processFinishPlanovacZatvoreniaAutomatu(message);
+			break;
+
+			case Id.procesInterakciaAutomat:
+				processFinishProcesInterakciaAutomat(message);
+			break;
+			}
+		break;
+
+		default:
+			processDefault(message);
+		break;
+		}
+	}
+	//meta! tag="end"
 
     @Override
     public AgentAutomatu myAgent() {

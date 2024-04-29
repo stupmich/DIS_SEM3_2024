@@ -17,6 +17,7 @@ public class MySimulation extends Simulation
 	private boolean	validationMode = true;
 	private Random seedGenerator;
 	private Stat timeInSystemStat;
+	private Stat timeLastLeaveSystemStat;
 
 	public MySimulation(int numberOfWorkersOrder, int numberOfWorkersPayment)
 	{
@@ -35,6 +36,7 @@ public class MySimulation extends Simulation
 		super.prepareSimulation();
 		// Create global statistcis
 		timeInSystemStat = new Stat();
+		timeLastLeaveSystemStat = new Stat();
 	}
 
 	@Override
@@ -55,6 +57,10 @@ public class MySimulation extends Simulation
 		super.replicationFinished();
 
 		this.timeInSystemStat.addSample(agentOkolia().getTimeInSystemStat().mean());
+
+		double time = agentOkolia().getLastCustomer().getTimeLeaveSystem();
+		time += 32400.0;
+		this.timeLastLeaveSystemStat.addSample(time);
 	}
 
 	@Override
@@ -160,5 +166,9 @@ public AgentAutomatu agentAutomatu()
 
 	public Stat getTimeInSystemStat() {
 		return timeInSystemStat;
+	}
+
+	public Stat getTimeLastLeaveSystemStat() {
+		return timeLastLeaveSystemStat;
 	}
 }

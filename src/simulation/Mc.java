@@ -5,7 +5,7 @@ import OSPABA.*;
 public class Mc extends IdList
 {
 	//meta! userInfo="Generated code: do not modify", tag="begin"
-	public static final int inicializuj = 1001;
+	public static final int inicializuj = 1016;
 	public static final int prichodZakaznika = 1002;
 	public static final int odchodZakaznika = 1003;
 	public static final int obsluhaZakaznika = 1004;
@@ -25,4 +25,5 @@ public class Mc extends IdList
 	public static final int koniecPripravyObjednavky = 4;
 	public static final int koniecPlatby = 5;
 	public static final int koniecVyzdvihnutiaVelkejObjednavky = 6;
+	public static final int zatvorenieAutomatu = 7;
 }

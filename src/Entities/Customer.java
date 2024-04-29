@@ -28,8 +28,9 @@ public class Customer extends Entity {
     private double timeLeaveSystem;
     private double timeArrival;
     private Worker blockingWorker;
-    double startTimeWaitingService;
-    double endTimeWaitingService;
+    private double startTimeWaitingService;
+    private double endTimeWaitingService;
+    private boolean notServed;
 
     public Customer(int id, Simulation sim, double timeArrival, CustomerType type) {
         super(sim);
@@ -108,5 +109,13 @@ public class Customer extends Entity {
 
     public void setEndTimeWaitingService(double endTimeWaitingService) {
         this.endTimeWaitingService = endTimeWaitingService;
+    }
+
+    public boolean isNotServed() {
+        return notServed;
+    }
+
+    public void setNotServed(boolean notServed) {
+        this.notServed = notServed;
     }
 }

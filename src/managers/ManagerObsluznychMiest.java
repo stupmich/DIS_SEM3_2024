@@ -25,12 +25,12 @@ public class ManagerObsluznychMiest extends Manager {
         }
     }
 
-    //meta! sender="AgentElektra", id="21", type="Notice"
-    public void processJeCasObedu(MessageForm message) {
+	//meta! sender="AgentElektra", id="21", type="Notice"
+	public void processJeCasObedu(MessageForm message) {
     }
 
-    //meta! sender="AgentElektra", id="27", type="Request"
-    public void processPripravaObjednavky(MessageForm message) {
+	//meta! sender="AgentElektra", id="27", type="Request"
+	public void processPripravaObjednavky(MessageForm message) {
         Customer customer = ((MyMessage) message).getCustomer();
         customer.setStartTimeWaitingService(mySim().currentTime());
 
@@ -71,14 +71,14 @@ public class ManagerObsluznychMiest extends Manager {
         }
     }
 
-    //meta! sender="AgentElektra", id="30", type="Request"
-    public void processVyzdvihnutieVelkejObjednavky(MessageForm message) {
+	//meta! sender="AgentElektra", id="30", type="Request"
+	public void processVyzdvihnutieVelkejObjednavky(MessageForm message) {
         message.setAddressee(myAgent().findAssistant(Id.procesVyzdvihnutieVelkehoTovaru));
         startContinualAssistant(message);
     }
 
-    //meta! sender="ProcesPripravaObjednavky", id="47", type="Finish"
-    public void processFinishProcesPripravaObjednavky(MessageForm message) {
+	//meta! sender="ProcesPripravaObjednavky", id="47", type="Finish"
+	public void processFinishProcesPripravaObjednavky(MessageForm message) {
         Customer customer = ((MyMessage) message).getCustomer();
         boolean newFreePlace = false;
 
@@ -101,14 +101,14 @@ public class ManagerObsluznychMiest extends Manager {
         response(message);
     }
 
-    //meta! sender="ProcesDiktovanieObjednavky", id="51", type="Finish"
-    public void processFinishProcesDiktovanieObjednavky(MessageForm message) {
+	//meta! sender="ProcesDiktovanieObjednavky", id="51", type="Finish"
+	public void processFinishProcesDiktovanieObjednavky(MessageForm message) {
         message.setAddressee(myAgent().findAssistant(Id.procesPripravaObjednavky));
         startContinualAssistant(message);
     }
 
-    //meta! sender="ProcesVyzdvihnutieVelkehoTovaru", id="49", type="Finish"
-    public void processFinishProcesVyzdvihnutieVelkehoTovaru(MessageForm message) {
+	//meta! sender="ProcesVyzdvihnutieVelkehoTovaru", id="49", type="Finish"
+	public void processFinishProcesVyzdvihnutieVelkehoTovaru(MessageForm message) {
         boolean newFreePlace = false;
 
         // Customer picked up order -> worker is free again and can serve another customer
@@ -128,14 +128,14 @@ public class ManagerObsluznychMiest extends Manager {
         response(message);
     }
 
-    //meta! userInfo="Process messages defined in code", id="0"
-    public void processDefault(MessageForm message) {
+	//meta! userInfo="Process messages defined in code", id="0"
+	public void processDefault(MessageForm message) {
         switch (message.code()) {
         }
     }
 
-    //meta! sender="AgentElektra", id="57", type="Request"
-    public void processDajPocetMiestVCakarni(MessageForm message) {
+	//meta! sender="AgentElektra", id="57", type="Request"
+	public void processDajPocetMiestVCakarni(MessageForm message) {
         message.setCode(Mc.dajPocetMiestVCakarni);
         message.setAddressee(mySim().findAgent(Id.agentElektra));
         ((MyMessage) message).setNumberOfFreePlacesWaitingRoom(9 - myAgent().getCustomersWaitingInShopBeforeOrder().size());
@@ -143,51 +143,55 @@ public class ManagerObsluznychMiest extends Manager {
         response(message);
     }
 
-    //meta! userInfo="Generated code: do not modify", tag="begin"
-    public void init() {
-    }
+	//meta! userInfo="Generated code: do not modify", tag="begin"
+	public void init()
+	{
+	}
 
-    @Override
-    public void processMessage(MessageForm message) {
-        switch (message.code()) {
-            case Mc.vyzdvihnutieVelkejObjednavky:
-                processVyzdvihnutieVelkejObjednavky(message);
-                break;
+	@Override
+	public void processMessage(MessageForm message)
+	{
+		switch (message.code())
+		{
+		case Mc.finish:
+			switch (message.sender().id())
+			{
+			case Id.procesVyzdvihnutieVelkehoTovaru:
+				processFinishProcesVyzdvihnutieVelkehoTovaru(message);
+			break;
 
-            case Mc.finish:
-                switch (message.sender().id()) {
-                    case Id.procesPripravaObjednavky:
-                        processFinishProcesPripravaObjednavky(message);
-                        break;
+			case Id.procesDiktovanieObjednavky:
+				processFinishProcesDiktovanieObjednavky(message);
+			break;
 
-                    case Id.procesDiktovanieObjednavky:
-                        processFinishProcesDiktovanieObjednavky(message);
-                        break;
+			case Id.procesPripravaObjednavky:
+				processFinishProcesPripravaObjednavky(message);
+			break;
+			}
+		break;
 
-                    case Id.procesVyzdvihnutieVelkehoTovaru:
-                        processFinishProcesVyzdvihnutieVelkehoTovaru(message);
-                        break;
-                }
-                break;
+		case Mc.dajPocetMiestVCakarni:
+			processDajPocetMiestVCakarni(message);
+		break;
 
-            case Mc.dajPocetMiestVCakarni:
-                processDajPocetMiestVCakarni(message);
-                break;
+		case Mc.jeCasObedu:
+			processJeCasObedu(message);
+		break;
 
-            case Mc.jeCasObedu:
-                processJeCasObedu(message);
-                break;
+		case Mc.vyzdvihnutieVelkejObjednavky:
+			processVyzdvihnutieVelkejObjednavky(message);
+		break;
 
-            case Mc.pripravaObjednavky:
-                processPripravaObjednavky(message);
-                break;
+		case Mc.pripravaObjednavky:
+			processPripravaObjednavky(message);
+		break;
 
-            default:
-                processDefault(message);
-                break;
-        }
-    }
-    //meta! tag="end"
+		default:
+			processDefault(message);
+		break;
+		}
+	}
+	//meta! tag="end"
 
     @Override
     public AgentObsluznychMiest myAgent() {

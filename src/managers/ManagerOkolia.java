@@ -81,15 +81,19 @@ public class ManagerOkolia extends Manager
 	public void processOdchodZakaznika(MessageForm message)
 	{
 		Customer leavingCustomer = ((MyMessage)message).getCustomer();
-		leavingCustomer.setTimeLeaveSystem(mySim().currentTime());
 
-//		((Sem2) core).setLastCustomer(customer);
 		myAgent().incCountCustomersOut();
+
+		if (!leavingCustomer.isNotServed()) {
+			leavingCustomer.setTimeLeaveSystem(mySim().currentTime());
+
+			myAgent().setLastCustomer(leavingCustomer);
 //		((Sem2) core).incServedCustomers();
 //		((Sem2) core).getAllCustomers().remove(customer);
 
-		double timeInSystem = leavingCustomer.getTimeLeaveSystem() - leavingCustomer.getTimeArrival();
-		myAgent().getTimeInSystemStat().addSample(timeInSystem);
+			double timeInSystem = leavingCustomer.getTimeLeaveSystem() - leavingCustomer.getTimeArrival();
+			myAgent().getTimeInSystemStat().addSample(timeInSystem);
+		}
 	}
 
 	//meta! userInfo="Process messages defined in code", id="0"
@@ -110,6 +114,10 @@ public class ManagerOkolia extends Manager
 	{
 		switch (message.code())
 		{
+		case Mc.inicializuj:
+			processInicializuj(message);
+		break;
+
 		case Mc.odchodZakaznika:
 			processOdchodZakaznika(message);
 		break;
@@ -117,26 +125,22 @@ public class ManagerOkolia extends Manager
 		case Mc.finish:
 			switch (message.sender().id())
 			{
-			case Id.planovacPrichodovOnlineZakaznikov:
-				processFinishPlanovacPrichodovOnlineZakaznikov(message);
-			break;
-
-			case Id.planovacPrichodovZmluvnychZakaznikov:
-				processFinishPlanovacPrichodovZmluvnychZakaznikov(message);
+			case Id.planovacPrichodovZakaznikovValidMod:
+				processFinishPlanovacPrichodovZakaznikovValidMod(message);
 			break;
 
 			case Id.planovacPrichodovBeznychZakaznikov:
 				processFinishPlanovacPrichodovBeznychZakaznikov(message);
 			break;
 
-			case Id.planovacPrichodovZakaznikovValidMod:
-				processFinishPlanovacPrichodovZakaznikovValidMod(message);
+			case Id.planovacPrichodovZmluvnychZakaznikov:
+				processFinishPlanovacPrichodovZmluvnychZakaznikov(message);
+			break;
+
+			case Id.planovacPrichodovOnlineZakaznikov:
+				processFinishPlanovacPrichodovOnlineZakaznikov(message);
 			break;
 			}
-		break;
-
-		case Mc.inicializuj:
-			processInicializuj(message);
 		break;
 
 		default:

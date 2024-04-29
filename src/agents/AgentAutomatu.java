@@ -20,6 +20,7 @@ public class AgentAutomatu extends Agent
 		super(id, mySim, parent);
 		init();
 		addOwnMessage(Mc.koniecInterakcie);
+		addOwnMessage(Mc.zatvorenieAutomatu);
 	}
 
 	@Override
@@ -37,6 +38,8 @@ public class AgentAutomatu extends Agent
 	{
 		new ManagerAutomatu(Id.managerAutomatu, mySim(), this);
 		new ProcesInterakciaAutomat(Id.procesInterakciaAutomat, mySim(), this);
+		new PlanovacZatvoreniaAutomatu(Id.planovacZatvoreniaAutomatu, mySim(), this);
+		addOwnMessage(Mc.inicializuj);
 		addOwnMessage(Mc.dajPocetMiestVCakarni);
 		addOwnMessage(Mc.uvolniloSaMiesto);
 		addOwnMessage(Mc.vydanieListku);

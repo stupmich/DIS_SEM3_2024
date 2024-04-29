@@ -375,9 +375,13 @@ public class ElektrokomponentyGUI extends JFrame implements ActionListener, ISim
     public void refresh(Simulation simulation) {
         if (turboMode) {
             this.executedReplicationsTurbo.setText(Integer.toString(((MySimulation) simulation).currentReplication()));
-//            this.confIntervalTimeInSystemTurbo.setText("<" + String.format("%.3f", simulation.getConfIntTimeInSystemLower() / 60.0)
-//                    + " ; " + String.format("%.3f", simulation.getConfIntTimeInSystemUpper() / 60.0)
-//                    + ">");
+
+            if (((MySimulation) simulation).currentReplication() > 2 ) {
+                double[] confIntervalTimeInSystem95 = ((MySimulation) simulation).getTimeInSystemStat().confidenceInterval_95();
+                this.confIntervalTimeInSystemTurbo.setText("<" + String.format("%.3f", confIntervalTimeInSystem95[0])
+                        + " ; " + String.format("%.3f", confIntervalTimeInSystem95[1])
+                        + ">");
+            }
             this.averageTimeSystemTurbo.setText(String.format("%.3f", ((MySimulation) simulation).getTimeInSystemStat().mean()) + " sekúnd / " + String.format("%.3f", ((MySimulation) simulation).getTimeInSystemStat().mean() / 60.0) + " minút");
             //            this.averageNumberServedCustomersTurbo.setText(String.format("%.3f", simulation.getAverageServedCustomer()));
 //            this.averageTimeQueueTicketTurbo.setText(String.format(String.format("%.3f", simulation.getAverageTimeTicket()) + " sekúnd / " + "%.3f", simulation.getAverageTimeTicket() / 60.0) + " minút");
@@ -385,14 +389,14 @@ public class ElektrokomponentyGUI extends JFrame implements ActionListener, ISim
 //            this.averageUsePercTicketTurbo.setText(String.format("%.2f", simulation.getAverageUsePercentTicket()) + "%");
 //            this.averageUsePercOrderTurbo.setText(String.format("%.2f", simulation.getAverageUsePercentOrder()) + "%");
 //            this.averageUsePercPaymentTurbo.setText(String.format("%.2f", simulation.getAverageUsePercentPayment()) + "%");
-//
-//            // Convert seconds to hours, minutes and remaining seconds
-//            long hours = TimeUnit.SECONDS.toHours((long) simulation.getAverageTimeLeaveSystem());
-//            long minutes = TimeUnit.SECONDS.toMinutes((long) simulation.getAverageTimeLeaveSystem()) - (hours * 60);
-//            long remainingSeconds = (long) (simulation.getAverageTimeLeaveSystem() - TimeUnit.HOURS.toSeconds(hours) - TimeUnit.MINUTES.toSeconds(minutes));
-//            // Format the time as "hours:minutes:seconds"
-//            String time = String.format("%d:%02d:%02d", hours, minutes, remainingSeconds);
-//            this.averageTimeLeaveSystemTurbo.setText(time);
+
+            // Convert seconds to hours, minutes and remaining seconds
+            long hours = TimeUnit.SECONDS.toHours((long) ((MySimulation) simulation).getTimeLastLeaveSystemStat().mean());
+            long minutes = TimeUnit.SECONDS.toMinutes((long) ((MySimulation) simulation).getTimeLastLeaveSystemStat().mean()) - (hours * 60);
+            long remainingSeconds = (long) (((MySimulation) simulation).getTimeLastLeaveSystemStat().mean() - TimeUnit.HOURS.toSeconds(hours) - TimeUnit.MINUTES.toSeconds(minutes));
+            // Format the time as "hours:minutes:seconds"
+            String time = String.format("%d:%02d:%02d", hours, minutes, remainingSeconds);
+            this.averageTimeLeaveSystemTurbo.setText(time);
 
         } else {
             this.timeProgrammer.setText(Double.toString(simulation.currentTime()));
@@ -502,10 +506,13 @@ public class ElektrokomponentyGUI extends JFrame implements ActionListener, ISim
                 throw new RuntimeException(e);
             }
 
-//            this.confIntervalTimeInSystemWatchTime.setText("<" + String.format("%.3f", simulation.getConfIntTimeInSystemLower() / 60.0)
-//                    + " ; " + String.format("%.3f", simulation.getConfIntTimeInSystemUpper() / 60.0)
-//                    + ">");
-//
+            if (((MySimulation) simulation).currentReplication() > 2 ) {
+                double[] confIntervalTimeInSystem95 = ((MySimulation) simulation).getTimeInSystemStat().confidenceInterval_95();
+                this.confIntervalTimeInSystemWatchTime.setText("<" + String.format("%.3f", confIntervalTimeInSystem95[0])
+                        + " ; " + String.format("%.3f", confIntervalTimeInSystem95[1])
+                        + ">");
+            }
+
             this.averageTimeSystemWatchTime.setText(String.format("%.3f", ((MySimulation) simulation).getTimeInSystemStat().mean()) + " sekúnd / " + String.format("%.3f", ((MySimulation) simulation).getTimeInSystemStat().mean() / 60.0) + " minút");
 //            this.averageTimeQueueTicketWatchTime.setText(String.format(String.format("%.3f", simulation.getAverageTimeTicket()) + " sekúnd / " + "%.3f", simulation.getAverageTimeTicket() / 60.0) + " minút");
 //            this.averageNumberServedCustomersWatchTime.setText(String.format("%.3f", simulation.getAverageServedCustomer()));
@@ -513,14 +520,14 @@ public class ElektrokomponentyGUI extends JFrame implements ActionListener, ISim
 //            this.averageUsePercTicketWatchTime.setText(String.format("%.2f", simulation.getAverageUsePercentTicket()) + "%");
 //            this.averageUsePercOrderWatchTime.setText(String.format("%.2f", simulation.getAverageUsePercentOrder()) + "%");
 //            this.averageUsePercPaymentWatchTime.setText(String.format("%.2f", simulation.getAverageUsePercentPayment()) + "%");
-//
-//            // Convert seconds to hours, minutes and remaining seconds
-//            long hoursTimeLeaveSystem = TimeUnit.SECONDS.toHours((long) simulation.getAverageTimeLeaveSystem());
-//            long minutesTimeLeaveSystem = TimeUnit.SECONDS.toMinutes((long) simulation.getAverageTimeLeaveSystem()) - (hoursTimeLeaveSystem * 60);
-//            long remainingSecondsTimeLeaveSystem = (long) (simulation.getAverageTimeLeaveSystem() - TimeUnit.HOURS.toSeconds(hoursTimeLeaveSystem) - TimeUnit.MINUTES.toSeconds(minutesTimeLeaveSystem));
-//            // Format the time as "hours:minutes:seconds"
-//            String time = String.format("%d:%02d:%02d", hoursTimeLeaveSystem, minutesTimeLeaveSystem, remainingSecondsTimeLeaveSystem);
-//            this.averageTimeLeaveSystemWatchTime.setText(time);
+
+            // Convert seconds to hours, minutes and remaining seconds
+            long hoursTimeLeaveSystem = TimeUnit.SECONDS.toHours((long) ((MySimulation) simulation).getTimeLastLeaveSystemStat().mean());
+            long minutesTimeLeaveSystem = TimeUnit.SECONDS.toMinutes((long) ((MySimulation) simulation).getTimeLastLeaveSystemStat().mean()) - (hoursTimeLeaveSystem * 60);
+            long remainingSecondsTimeLeaveSystem = (long) (((MySimulation) simulation).getTimeLastLeaveSystemStat().mean() - TimeUnit.HOURS.toSeconds(hoursTimeLeaveSystem) - TimeUnit.MINUTES.toSeconds(minutesTimeLeaveSystem));
+            // Format the time as "hours:minutes:seconds"
+            String time = String.format("%d:%02d:%02d", hoursTimeLeaveSystem, minutesTimeLeaveSystem, remainingSecondsTimeLeaveSystem);
+            this.averageTimeLeaveSystemWatchTime.setText(time);
         }
     }
 }

@@ -59,9 +59,9 @@ public class AgentObsluznychMiest extends Agent
 	private void init()
 	{
 		new ManagerObsluznychMiest(Id.managerObsluznychMiest, mySim(), this);
+		new ProcesDiktovanieObjednavky(Id.procesDiktovanieObjednavky, mySim(), this);
 		new ProcesPripravaObjednavky(Id.procesPripravaObjednavky, mySim(), this);
 		new ProcesVyzdvihnutieVelkehoTovaru(Id.procesVyzdvihnutieVelkehoTovaru, mySim(), this);
-		new ProcesDiktovanieObjednavky(Id.procesDiktovanieObjednavky, mySim(), this);
 		addOwnMessage(Mc.jeCasObedu);
 		addOwnMessage(Mc.pripravaObjednavky);
 		addOwnMessage(Mc.dajPocetMiestVCakarni);

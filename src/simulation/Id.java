@@ -19,6 +19,7 @@ public class Id extends IdList
 	public static final int managerPokladni = 106;
 	public static final int managerObed = 108;
 	public static final int managerAutomatu = 109;
+	public static final int planovacZatvoreniaAutomatu = 1010;
 	public static final int planovacPrichodovBeznychZakaznikov = 1001;
 	public static final int planovacPrichodovZmluvnychZakaznikov = 1002;
 	public static final int planovacPrichodovOnlineZakaznikov = 1003;
