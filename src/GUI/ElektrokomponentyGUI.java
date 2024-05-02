@@ -97,6 +97,13 @@ public class ElektrokomponentyGUI extends JFrame implements ActionListener, ISim
     private JLabel confIntervalTimeInSystemWatchTime;
     private JLabel confIntervalTimeInSystemTurbo;
     private JSlider simSpeedIntervalSlider;
+    private JLabel confIntervalAverageTimeQueueTicketTurbo;
+    private JLabel confIntervalAverageNumberQueueTicketTurbo;
+    private JLabel confIntervalAverageUsePercTicketTurbo;
+    private JLabel confIntervalAverageNumberServedCustomersTurbo;
+    private JLabel confIntervalAverageTimeLeaveSystemTurbo;
+    private JLabel confIntervalAverageUsePercPaymentTurbo;
+    private JLabel confIntervalAverageUsePercOrderTurbo;
     private MySimulation simulation;
     private boolean turboMode;
     private DefaultTableModel modelWorkersOrder;
@@ -226,7 +233,7 @@ public class ElektrokomponentyGUI extends JFrame implements ActionListener, ISim
             });
             this.simulation.onReplicationDidFinish(sim -> refresh(sim));
 
-            this.simulation.simulateAsync(Integer.parseInt(textFieldReplicationsTurbo.getText()), Config.simEndTime);
+            this.simulation.simulateAsync(Integer.parseInt(textFieldReplicationsTurbo.getText()));
 
         } else if (e.getSource() == pauseTurboButton) {
             if (simulation.isPaused()) {
@@ -263,7 +270,7 @@ public class ElektrokomponentyGUI extends JFrame implements ActionListener, ISim
                 this.changeSpeed(this.simulation);
             });
 
-            simulation.simulateAsync(Integer.parseInt(textFieldReplications.getText()), Config.simEndTime);
+            simulation.simulateAsync(Integer.parseInt(textFieldReplications.getText()));
 
         } else if (e.getSource() == pauseWatchTimeButton) {
             if (simulation.isPaused()) {
@@ -304,7 +311,7 @@ public class ElektrokomponentyGUI extends JFrame implements ActionListener, ISim
 
                         threadSimulationInner1 = new Thread(new Runnable() {
                             public void run() {
-                                simulation.simulate(Integer.parseInt(textFieldReplicationsGraph.getText()), Config.simEndTime);
+                                simulation.simulate(Integer.parseInt(textFieldReplicationsGraph.getText()));
                                 series1.add(simulation.getNumberOfWorkersPayment(), simulation.getNumberOfCustomersWaitingTicketStat().mean());
                                 chart1.fireChartChanged();
                             }
@@ -379,6 +386,52 @@ public class ElektrokomponentyGUI extends JFrame implements ActionListener, ISim
                 this.confIntervalTimeInSystemTurbo.setText("<" + String.format("%.3f", confIntervalTimeInSystem95[0])
                         + " ; " + String.format("%.3f", confIntervalTimeInSystem95[1])
                         + ">");
+
+                double[] confIntervalAverageNumberQueueTicketTurbo95 = ((MySimulation) simulation).getNumberOfCustomersWaitingTicketStat().confidenceInterval_95();
+                this.confIntervalAverageNumberQueueTicketTurbo.setText("<" + String.format("%.3f", confIntervalAverageNumberQueueTicketTurbo95[0])
+                        + " ; " + String.format("%.3f", confIntervalAverageNumberQueueTicketTurbo95[1])
+                        + ">");
+
+                double[] confIntervalAverageNumberServedCustomersTurbo95 = ((MySimulation) simulation).getAverageServedCustomerStat().confidenceInterval_95();
+                this.confIntervalAverageNumberServedCustomersTurbo.setText("<" + String.format("%.3f", confIntervalAverageNumberServedCustomersTurbo95[0])
+                        + " ; " + String.format("%.3f", confIntervalAverageNumberServedCustomersTurbo95[1])
+                        + ">");
+
+                double[] confIntervalAverageTimeQueueTicketTurbo95 = ((MySimulation) simulation).getAverageTimeTicketStat().confidenceInterval_95();
+                this.confIntervalAverageTimeQueueTicketTurbo.setText("<" + String.format("%.3f", confIntervalAverageTimeQueueTicketTurbo95[0])
+                        + " ; " + String.format("%.3f", confIntervalAverageTimeQueueTicketTurbo95[1])
+                        + ">");
+
+                double[] confIntervalAverageUsePercTicketTurbo95 = ((MySimulation) simulation).getAverageUsePercentTicketStat().confidenceInterval_95();
+                this.confIntervalAverageUsePercTicketTurbo.setText("<" + String.format("%.3f", confIntervalAverageUsePercTicketTurbo95[0] * 100.0)
+                        + " ; " + String.format("%.3f", confIntervalAverageUsePercTicketTurbo95[1] * 100.0)
+                        + ">");
+
+                double[] confIntervalAverageUsePercOrderTurbo95 = ((MySimulation) simulation).getAverageUsePercentOrderStat().confidenceInterval_95();
+                this.confIntervalAverageUsePercOrderTurbo.setText("<" + String.format("%.3f", confIntervalAverageUsePercOrderTurbo95[0] * 100.0)
+                        + " ; " + String.format("%.3f", confIntervalAverageUsePercOrderTurbo95[1] * 100.0)
+                        + ">");
+
+                double[] confIntervalAverageUsePercPaymentTurbo95 = ((MySimulation) simulation).getAverageUsePercentPaymentStat().confidenceInterval_95();
+                this.confIntervalAverageUsePercPaymentTurbo.setText("<" + String.format("%.3f", confIntervalAverageUsePercPaymentTurbo95[0] * 100.0)
+                        + " ; " + String.format("%.3f", confIntervalAverageUsePercPaymentTurbo95[1] * 100.0)
+                        + ">");
+
+                double[] confIntervalAverageTimeLeaveSystemTurbo95 = ((MySimulation) simulation).getTimeLastLeaveSystemStat().confidenceInterval_95();
+                // Convert seconds to hours, minutes and remaining seconds
+                long hoursL = TimeUnit.SECONDS.toHours((long) confIntervalAverageTimeLeaveSystemTurbo95[0]);
+                long minutesL = TimeUnit.SECONDS.toMinutes((long) confIntervalAverageTimeLeaveSystemTurbo95[0]) - (hoursL * 60);
+                long remainingSecondsL = (long) (confIntervalAverageTimeLeaveSystemTurbo95[0] - TimeUnit.HOURS.toSeconds(hoursL) - TimeUnit.MINUTES.toSeconds(minutesL));
+                // Format the time as "hours:minutes:seconds"
+                String timeL = String.format("%d:%02d:%02d", hoursL, minutesL, remainingSecondsL);
+
+                long hoursH = TimeUnit.SECONDS.toHours((long) confIntervalAverageTimeLeaveSystemTurbo95[1]);
+                long minutesH = TimeUnit.SECONDS.toMinutes((long) confIntervalAverageTimeLeaveSystemTurbo95[1]) - (hoursH * 60);
+                long remainingSecondsH = (long) (confIntervalAverageTimeLeaveSystemTurbo95[1] - TimeUnit.HOURS.toSeconds(hoursH) - TimeUnit.MINUTES.toSeconds(minutesH));
+                // Format the time as "hours:minutes:seconds"
+                String timeH = String.format("%d:%02d:%02d", hoursH, minutesH, remainingSecondsH);
+
+                this.confIntervalAverageTimeLeaveSystemTurbo.setText("<" + timeL + " ; " + timeH + ">");
             }
             this.averageTimeSystemTurbo.setText(String.format("%.3f", ((MySimulation) simulation).getTimeInSystemStat().mean()) + " sekúnd / " + String.format("%.3f", ((MySimulation) simulation).getTimeInSystemStat().mean() / 60.0) + " minút");
             this.averageNumberServedCustomersTurbo.setText(String.format("%.3f", ((MySimulation) simulation).getAverageServedCustomerStat().mean()));

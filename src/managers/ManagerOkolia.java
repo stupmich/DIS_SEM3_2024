@@ -85,7 +85,6 @@ public class ManagerOkolia extends Manager
 	public void processOdchodZakaznika(MessageForm message)
 	{
 		Customer leavingCustomer = ((MyMessage)message).getCustomer();
-
 		myAgent().getAllCustomers().remove(leavingCustomer);
 		myAgent().incCountCustomersOut();
 
@@ -98,6 +97,10 @@ public class ManagerOkolia extends Manager
 
 			double timeInSystem = leavingCustomer.getTimeLeaveSystem() - leavingCustomer.getTimeArrival();
 			myAgent().getTimeInSystemStat().addSample(timeInSystem);
+		}
+
+		if (mySim().currentTime() > Config.closeTicketDispenserTime && myAgent().getAllCustomers().isEmpty()) {
+			mySim().stopReplication();
 		}
 	}
 

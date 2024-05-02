@@ -1044,9 +1044,57 @@
                       <text value="95% IS priemerný počet obslúžených zákazníkov"/>
                     </properties>
                   </component>
-                  <component id="6c004" class="javax.swing.JLabel">
+                  <component id="6c004" class="javax.swing.JLabel" binding="confIntervalAverageTimeQueueTicketTurbo">
                     <constraints>
                       <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <text value=""/>
+                    </properties>
+                  </component>
+                  <component id="5661a" class="javax.swing.JLabel" binding="confIntervalAverageNumberQueueTicketTurbo">
+                    <constraints>
+                      <grid row="5" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <text value=""/>
+                    </properties>
+                  </component>
+                  <component id="f2e9a" class="javax.swing.JLabel" binding="confIntervalAverageUsePercTicketTurbo">
+                    <constraints>
+                      <grid row="7" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <text value=""/>
+                    </properties>
+                  </component>
+                  <component id="e3f00" class="javax.swing.JLabel" binding="confIntervalAverageUsePercOrderTurbo">
+                    <constraints>
+                      <grid row="9" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <text value=""/>
+                    </properties>
+                  </component>
+                  <component id="e1a23" class="javax.swing.JLabel" binding="confIntervalAverageUsePercPaymentTurbo">
+                    <constraints>
+                      <grid row="11" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <text value=""/>
+                    </properties>
+                  </component>
+                  <component id="c15ef" class="javax.swing.JLabel" binding="confIntervalAverageTimeLeaveSystemTurbo">
+                    <constraints>
+                      <grid row="13" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <text value=""/>
+                    </properties>
+                  </component>
+                  <component id="82c2f" class="javax.swing.JLabel" binding="confIntervalAverageNumberServedCustomersTurbo">
+                    <constraints>
+                      <grid row="15" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
                       <text value=""/>
