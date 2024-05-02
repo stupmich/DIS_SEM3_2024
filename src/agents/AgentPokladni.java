@@ -4,6 +4,7 @@ import Entities.Customer;
 import Entities.Worker;
 import OSPABA.*;
 import OSPDataStruct.SimQueue;
+import OSPStat.WStat;
 import simulation.*;
 import managers.*;
 import continualAssistants.*;
@@ -14,8 +15,8 @@ import java.util.LinkedList;
 public class AgentPokladni extends Agent
 {
 	private int highestWorkersPaymentID;
-	private LinkedList<Worker> workersPayment;
-	private LinkedList<Worker> workersPaymentWorking;
+	private SimQueue<Worker> workersPayment;
+	private SimQueue<Worker> workersPaymentWorking;
 	private SimQueue<SimQueue< MessageForm >> queuesCustomersWaitingForPayment;
 
 	public AgentPokladni(int id, Simulation mySim, Agent parent)
@@ -31,8 +32,8 @@ public class AgentPokladni extends Agent
 		super.prepareReplication();
 		// Setup component for the next replication
 		highestWorkersPaymentID = 0;
-		this.workersPayment = new LinkedList<Worker>();
-		this.workersPaymentWorking = new LinkedList<Worker>();
+		this.workersPayment = new SimQueue<Worker>(new WStat(mySim()));
+		this.workersPaymentWorking = new SimQueue<Worker>(new WStat(mySim()));
 
 		for (int i = 0; i < ((MySimulation)mySim()).getNumberOfWorkersPayment(); i++ ) {
 			Worker worker = new Worker(this.highestWorkersPaymentID, Worker.WorkerType.PAYMENT, mySim());
@@ -57,11 +58,11 @@ public class AgentPokladni extends Agent
 	//meta! tag="end"
 
 
-	public LinkedList<Worker> getWorkersPayment() {
+	public SimQueue<Worker> getWorkersPayment() {
 		return workersPayment;
 	}
 
-	public LinkedList<Worker> getWorkersPaymentWorking() {
+	public SimQueue<Worker> getWorkersPaymentWorking() {
 		return workersPaymentWorking;
 	}
 

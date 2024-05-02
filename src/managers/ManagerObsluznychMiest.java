@@ -38,13 +38,15 @@ public class ManagerObsluznychMiest extends Manager {
             if (myAgent().getWorkersOrderNormal().size() != 0) {
                 // there are free workers for regular customers and with contract
                 Worker worker = myAgent().getWorkersOrderNormal().removeFirst();
+                myAgent().getWorkersOrderWorkingNormal().add(worker);
+
                 worker.setIdCustomer(customer.getId());
                 worker.setCustomer(customer);
 
-//                TODO STATS
-                //myAgent().getAverageUsePercentOrderNormalStat().updateStatistics(core, myAgent().getWorkersOrderWorkingNormal());
-                myAgent().getWorkersOrderWorkingNormal().add(worker);
-
+                customer.setEndTimeWaitingService(mySim().currentTime());
+                double timeWaitingService = customer.getEndTimeWaitingService() - customer.getStartTimeWaitingService();
+                myAgent().getAverageTimeWaitingServiceStat().addSample(timeWaitingService);
+                
                 ((MyMessage) message).setWorker(worker);
                 message.setAddressee(myAgent().findAssistant(Id.procesDiktovanieObjednavky));
                 startContinualAssistant(message);
@@ -55,12 +57,14 @@ public class ManagerObsluznychMiest extends Manager {
             if (myAgent().getWorkersOrderOnline().size() != 0) {
                 // there are free workers for online customers
                 Worker worker = myAgent().getWorkersOrderOnline().removeFirst();
+                myAgent().getWorkersOrderWorkingOnline().add(worker);
+
                 worker.setIdCustomer(customer.getId());
                 worker.setCustomer(customer);
 
-//                TODO STATS
-//                myAgent().getAverageUsePercentOrderOnlineStat().updateStatistics(core, myAgent().getWorkersOrderWorkingOnline());
-                myAgent().getWorkersOrderWorkingOnline().add(worker);
+                customer.setEndTimeWaitingService(mySim().currentTime());
+                double timeWaitingService = customer.getEndTimeWaitingService() - customer.getStartTimeWaitingService();
+                myAgent().getAverageTimeWaitingServiceStat().addSample(timeWaitingService);
 
                 ((MyMessage) message).setWorker(worker);
                 message.setAddressee(myAgent().findAssistant(Id.procesPripravaObjednavky));
@@ -223,11 +227,15 @@ public class ManagerObsluznychMiest extends Manager {
 
             if (nextCustomerMessageNormal != null) {
                 newFreePlace = true;
+                Customer nextCustomerNormal = nextCustomerMessageNormal.getCustomer();
                 myAgent().getCustomersWaitingInShopBeforeOrder().remove(nextCustomerMessageNormal);
-                worker.setIdCustomer(nextCustomerMessageNormal.getCustomer().getId());
-                worker.setCustomer(nextCustomerMessageNormal.getCustomer());
+                worker.setIdCustomer(nextCustomerNormal.getId());
+                worker.setCustomer(nextCustomerNormal);
 
-//                    MyMessage nextMessage = new MyMessage(((MyMessage)message));
+                nextCustomerMessageNormal.getCustomer().setEndTimeWaitingService(mySim().currentTime());
+                double timeWaitingService = nextCustomerNormal.getEndTimeWaitingService() - nextCustomerNormal.getStartTimeWaitingService();
+                myAgent().getAverageTimeWaitingServiceStat().addSample(timeWaitingService);
+
                 nextCustomerMessageNormal.setWorker(worker);
                 nextCustomerMessageNormal.setCode(Mc.pripravaObjednavky);
                 nextCustomerMessageNormal.setAddressee(myAgent().findAssistant(Id.procesDiktovanieObjednavky));
@@ -237,8 +245,6 @@ public class ManagerObsluznychMiest extends Manager {
                 worker.setIdCustomer(-1);
                 worker.setCustomer(null);
                 myAgent().getWorkersOrderNormal().add(worker);
-
-//                    myAgent().getAverageUsePercentOrderNormalStat().updateStatistics(core, myAgent().getWorkersOrderWorkingNormal());
                 myAgent().getWorkersOrderWorkingNormal().remove(worker);
             }
 
@@ -257,11 +263,15 @@ public class ManagerObsluznychMiest extends Manager {
 
             if (nextMessageCustomerOnline != null) {
                 newFreePlace = true;
+                Customer nextCustomerOnline = nextMessageCustomerOnline.getCustomer();
                 myAgent().getCustomersWaitingInShopBeforeOrder().remove(nextMessageCustomerOnline);
-                worker.setIdCustomer(nextMessageCustomerOnline.getCustomer().getId());
-                worker.setCustomer(nextMessageCustomerOnline.getCustomer());
+                worker.setIdCustomer(nextCustomerOnline.getId());
+                worker.setCustomer(nextCustomerOnline);
 
-//                    MyMessage nextMessage = new MyMessage(((MyMessage)message));
+                nextMessageCustomerOnline.getCustomer().setEndTimeWaitingService(mySim().currentTime());
+                double timeWaitingService = nextCustomerOnline.getEndTimeWaitingService() - nextCustomerOnline.getStartTimeWaitingService();
+                myAgent().getAverageTimeWaitingServiceStat().addSample(timeWaitingService);
+
                 nextMessageCustomerOnline.setWorker(worker);
                 nextMessageCustomerOnline.setCode(Mc.pripravaObjednavky);
                 nextMessageCustomerOnline.setAddressee(myAgent().findAssistant(Id.procesPripravaObjednavky));
@@ -270,8 +280,6 @@ public class ManagerObsluznychMiest extends Manager {
                 worker.setIdCustomer(-1);
                 worker.setCustomer(null);
                 myAgent().getWorkersOrderOnline().add(worker);
-
-//                    myAgent().getAverageUsePercentOrderOnlineStat().updateStatistics(core, myAgent().getWorkersOrderWorkingOnline());
                 myAgent().getWorkersOrderWorkingOnline().remove(worker);
             }
         }

@@ -3,6 +3,7 @@ package agents;
 import Entities.Worker;
 import OSPABA.*;
 import OSPDataStruct.SimQueue;
+import OSPStat.Stat;
 import OSPStat.WStat;
 import simulation.*;
 import managers.*;
@@ -15,10 +16,11 @@ public class AgentObsluznychMiest extends Agent
 {
 	private int highestWorkersOrderID;
 	private SimQueue< MessageForm > CustomersWaitingInShopBeforeOrder;
-	private LinkedList<Worker> workersOrderNormal;
-	private LinkedList<Worker> workersOrderOnline;
-	private LinkedList<Worker> workersOrderWorkingNormal;
-	private LinkedList<Worker> workersOrderWorkingOnline;
+	private SimQueue<Worker> workersOrderNormal;
+	private SimQueue<Worker> workersOrderOnline;
+	private SimQueue<Worker> workersOrderWorkingNormal;
+	private SimQueue<Worker> workersOrderWorkingOnline;
+	private Stat averageTimeWaitingServiceStat;
 
 	public AgentObsluznychMiest(int id, Simulation mySim, Agent parent)
 	{
@@ -37,10 +39,10 @@ public class AgentObsluznychMiest extends Agent
 		highestWorkersOrderID = 0;
 		CustomersWaitingInShopBeforeOrder = new SimQueue<>(new WStat(mySim()));
 
-		this.workersOrderNormal = new LinkedList<Worker>();
-		this.workersOrderOnline = new LinkedList<Worker>();
-		this.workersOrderWorkingNormal = new LinkedList<Worker>();
-		this.workersOrderWorkingOnline = new LinkedList<Worker>();
+		this.workersOrderNormal = new SimQueue<Worker>(new WStat(mySim()));
+		this.workersOrderOnline = new SimQueue<Worker>(new WStat(mySim()));
+		this.workersOrderWorkingNormal = new SimQueue<Worker>(new WStat(mySim()));
+		this.workersOrderWorkingOnline = new SimQueue<Worker>(new WStat(mySim()));
 
 		for (int i = 0; i < ((MySimulation)mySim()).getNumberOfNormalWorkers(); i++ ) {
 			Worker worker = new Worker(highestWorkersOrderID, Worker.WorkerType.ORDER_REGULAR_AND_CONTRACT, mySim());
@@ -53,6 +55,8 @@ public class AgentObsluznychMiest extends Agent
 			workersOrderOnline.add(worker);
 			highestWorkersOrderID++;
 		}
+
+		this.averageTimeWaitingServiceStat = new Stat();
 	}
 
 	//meta! userInfo="Generated code: do not modify", tag="begin"
@@ -73,19 +77,23 @@ public class AgentObsluznychMiest extends Agent
 		return CustomersWaitingInShopBeforeOrder;
 	}
 
-	public LinkedList<Worker> getWorkersOrderNormal() {
+	public SimQueue<Worker> getWorkersOrderNormal() {
 		return workersOrderNormal;
 	}
 
-	public LinkedList<Worker> getWorkersOrderOnline() {
+	public SimQueue<Worker> getWorkersOrderOnline() {
 		return workersOrderOnline;
 	}
 
-	public LinkedList<Worker> getWorkersOrderWorkingNormal() {
+	public SimQueue<Worker> getWorkersOrderWorkingNormal() {
 		return workersOrderWorkingNormal;
 	}
 
-	public LinkedList<Worker> getWorkersOrderWorkingOnline() {
+	public SimQueue<Worker> getWorkersOrderWorkingOnline() {
 		return workersOrderWorkingOnline;
+	}
+
+	public Stat getAverageTimeWaitingServiceStat() {
+		return averageTimeWaitingServiceStat;
 	}
 }

@@ -17,7 +17,14 @@ public class MySimulation extends Simulation
 	private boolean	validationMode = true;
 	private Random seedGenerator;
 	private Stat timeInSystemStat;
+	private Stat averageTimeWaitingServiceStat;
+	private Stat averageTimeTicketStat;
+	private Stat averageServedCustomerStat;
 	private Stat timeLastLeaveSystemStat;
+	private Stat numberOfCustomersWaitingTicketStat;
+	private Stat averageUsePercentTicketStat;
+	private Stat averageUsePercentOrderStat;
+	private Stat averageUsePercentPaymentStat;
 
 	public MySimulation(int numberOfWorkersOrder, int numberOfWorkersPayment)
 	{
@@ -35,8 +42,16 @@ public class MySimulation extends Simulation
 	{
 		super.prepareSimulation();
 		// Create global statistcis
+
 		timeInSystemStat = new Stat();
 		timeLastLeaveSystemStat = new Stat();
+		averageTimeWaitingServiceStat = new Stat();
+		averageTimeTicketStat = new Stat();
+		averageServedCustomerStat = new Stat();
+		numberOfCustomersWaitingTicketStat = new Stat();
+		averageUsePercentTicketStat = new Stat();
+		averageUsePercentOrderStat = new Stat();
+		averageUsePercentPaymentStat = new Stat();
 	}
 
 	@Override
@@ -57,10 +72,18 @@ public class MySimulation extends Simulation
 		super.replicationFinished();
 
 		this.timeInSystemStat.addSample(agentOkolia().getTimeInSystemStat().mean());
-
 		double time = agentOkolia().getLastCustomer().getTimeLeaveSystem();
 		time += 32400.0;
 		this.timeLastLeaveSystemStat.addSample(time);
+		this.averageTimeWaitingServiceStat.addSample(agentObsluznychMiest().getAverageTimeWaitingServiceStat().mean());
+		this.averageServedCustomerStat.addSample(agentOkolia().getCountCustomersServed());
+		this.averageTimeTicketStat.addSample(agentAutomatu().getAverageTimeTicketStat().mean());
+		this.numberOfCustomersWaitingTicketStat.addSample(agentAutomatu().get_queueCustomersTicketDispenser().lengthStatistic().mean());
+		this.averageUsePercentTicketStat.addSample(agentAutomatu().get_customerInteractingWithTicketDispenser().lengthStatistic().mean());
+		double averageUsePercentOrderNormal = agentObsluznychMiest().getWorkersOrderWorkingNormal().lengthStatistic().mean();
+		double averageUsePercentOrderOnline = agentObsluznychMiest().getWorkersOrderWorkingOnline().lengthStatistic().mean();
+		this.averageUsePercentOrderStat.addSample((averageUsePercentOrderNormal + averageUsePercentOrderOnline) / ((double)this.numberOfWorkersOrder));
+		this.averageUsePercentPaymentStat.addSample(agentPokladni().getWorkersPaymentWorking().lengthStatistic().mean() / ((double)this.numberOfWorkersPayment));
 	}
 
 	@Override
@@ -170,5 +193,33 @@ public AgentAutomatu agentAutomatu()
 
 	public Stat getTimeLastLeaveSystemStat() {
 		return timeLastLeaveSystemStat;
+	}
+
+	public Stat getAverageTimeWaitingServiceStat() {
+		return averageTimeWaitingServiceStat;
+	}
+
+	public Stat getAverageTimeTicketStat() {
+		return averageTimeTicketStat;
+	}
+
+	public Stat getAverageServedCustomerStat() {
+		return averageServedCustomerStat;
+	}
+
+	public Stat getNumberOfCustomersWaitingTicketStat() {
+		return numberOfCustomersWaitingTicketStat;
+	}
+
+	public Stat getAverageUsePercentTicketStat() {
+		return averageUsePercentTicketStat;
+	}
+
+	public Stat getAverageUsePercentOrderStat() {
+		return averageUsePercentOrderStat;
+	}
+
+	public Stat getAverageUsePercentPaymentStat() {
+		return averageUsePercentPaymentStat;
 	}
 }

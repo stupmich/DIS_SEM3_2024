@@ -26,9 +26,7 @@ public class ManagerAutomatu extends Manager {
 	public void processFinishProcesInterakciaAutomat(MessageForm message) {
         myAgent().set_isOccupied(false);
         myAgent().get_customerInteractingWithTicketDispenser().remove(message);
-        //myAgent().casCakania().addSample(((MyMessage)message).celkoveCakanie());
 
-        // TODO sus daj pozor
         message.setCode(Mc.vydanieListku);
         response(message);
 
@@ -64,16 +62,14 @@ public class ManagerAutomatu extends Manager {
             if (!myAgent().is_isOccupied() && ((MyMessage) message).getNumberOfFreePlacesWaitingRoom() > 0) {
                 startInteractionWithTicketDispenser(message);
             } else {
-                //((MyMessage)message).setZaciatokCakania(mySim().currentTime());
                 myAgent().get_queueCustomersTicketDispenser().enqueue(message);
             }
         } else { // Customer from queue was picked
             if (!myAgent().is_isOccupied() && ((MyMessage) message).getNumberOfFreePlacesWaitingRoom() > 0) {
                 MyMessage nextMessage = (MyMessage) myAgent().get_queueCustomersTicketDispenser().dequeue();
-//				nextMessage.setCelkoveCakanie(mySim().currentTime() - nextMessage.zaciatokCakania());
                 startInteractionWithTicketDispenser(nextMessage);
             } else {
-                System.out.println("uhmm"  + mySim().currentTime()); // nothing should happen, customer is waiting but there are no free places
+                // nothing should happen, customer is waiting but there are no free places
                 // or ticket dispenser is in use (should not be in this case tbh)
             }
         }
@@ -84,10 +80,10 @@ public class ManagerAutomatu extends Manager {
         if (!myAgent().is_isOccupied() && ((MyMessage) message).getNumberOfFreePlacesWaitingRoom() > 0
                 && myAgent().get_queueCustomersTicketDispenser().size() > 0) {
             MyMessage nextMessage = (MyMessage) myAgent().get_queueCustomersTicketDispenser().dequeue();
-//				nextMessage.setCelkoveCakanie(mySim().currentTime() - nextMessage.zaciatokCakania());
             startInteractionWithTicketDispenser(nextMessage);
-        } else {
-            System.out.println("uhmm" + mySim().currentTime()); // nothing should happen, customer is waiting but there are no free places
+        }
+        else {
+            // nothing should happen, customer is waiting but there are no free places
             // or ticket dispenser is in use (should not be in this case tbh)
         }
     }
@@ -162,6 +158,9 @@ public class ManagerAutomatu extends Manager {
     }
 
     private void startInteractionWithTicketDispenser(MessageForm message) {
+        double timeWaitingForTicket = mySim().currentTime() - ((MyMessage)message).getCustomer().getTimeArrival();
+        myAgent().getAverageTimeTicketStat().addSample(timeWaitingForTicket);
+
         myAgent().set_isOccupied(true);
         myAgent().get_customerInteractingWithTicketDispenser().add(message);
         message.setAddressee(myAgent().findAssistant(Id.procesInterakciaAutomat));

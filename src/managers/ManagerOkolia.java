@@ -37,6 +37,7 @@ public class ManagerOkolia extends Manager
 	public void processFinishPlanovacPrichodovZakaznikovValidMod(MessageForm message)
 	{
 		myAgent().incCountCustomersIn();
+		myAgent().getAllCustomers().add(((MyMessage)message).getCustomer());
 
 		message.setCode(Mc.prichodZakaznika);
 		message.setAddressee(mySim().findAgent(Id.agentModelu));
@@ -48,6 +49,7 @@ public class ManagerOkolia extends Manager
 	public void processFinishPlanovacPrichodovOnlineZakaznikov(MessageForm message)
 	{
 		myAgent().incCountCustomersIn();
+		myAgent().getAllCustomers().add(((MyMessage)message).getCustomer());
 
 		message.setCode(Mc.prichodZakaznika);
 		message.setAddressee(mySim().findAgent(Id.agentModelu));
@@ -59,6 +61,7 @@ public class ManagerOkolia extends Manager
 	public void processFinishPlanovacPrichodovBeznychZakaznikov(MessageForm message)
 	{
 		myAgent().incCountCustomersIn();
+		myAgent().getAllCustomers().add(((MyMessage)message).getCustomer());
 
 		message.setCode(Mc.prichodZakaznika);
 		message.setAddressee(mySim().findAgent(Id.agentModelu));
@@ -70,6 +73,7 @@ public class ManagerOkolia extends Manager
 	public void processFinishPlanovacPrichodovZmluvnychZakaznikov(MessageForm message)
 	{
 		myAgent().incCountCustomersIn();
+		myAgent().getAllCustomers().add(((MyMessage)message).getCustomer());
 
 		message.setCode(Mc.prichodZakaznika);
 		message.setAddressee(mySim().findAgent(Id.agentModelu));
@@ -82,14 +86,15 @@ public class ManagerOkolia extends Manager
 	{
 		Customer leavingCustomer = ((MyMessage)message).getCustomer();
 
+		myAgent().getAllCustomers().remove(leavingCustomer);
 		myAgent().incCountCustomersOut();
 
 		if (!leavingCustomer.isNotServed()) {
 			leavingCustomer.setTimeLeaveSystem(mySim().currentTime());
 
 			myAgent().setLastCustomer(leavingCustomer);
-//		((Sem2) core).incServedCustomers();
-//		((Sem2) core).getAllCustomers().remove(customer);
+			myAgent().incServedCustomers();
+
 
 			double timeInSystem = leavingCustomer.getTimeLeaveSystem() - leavingCustomer.getTimeArrival();
 			myAgent().getTimeInSystemStat().addSample(timeInSystem);

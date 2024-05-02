@@ -62,8 +62,6 @@ public class ManagerPokladni extends Manager
 			workerPayment.setIdCustomer(((MyMessage)message).getCustomer().getId());
 			workerPayment.setCustomer(((MyMessage)message).getCustomer());
 
-//			TODO STATS
-//			myAgent().getAverageUsePercentPaymentStat().updateStatistics(core, myAgent().getWorkersPaymentWorking());
 			myAgent().getWorkersPaymentWorking().add(workerPayment);
 
 			message.setAddressee(myAgent().findAssistant(Id.procesPlatba));
@@ -76,8 +74,6 @@ public class ManagerPokladni extends Manager
 			workerPayment.setIdCustomer(((MyMessage)message).getCustomer().getId());
 			workerPayment.setCustomer(((MyMessage)message).getCustomer());
 
-//			TODO STATS
-//			myAgent().getAverageUsePercentPaymentStat().updateStatistics(core, myAgent().getWorkersPaymentWorking());
 			myAgent().getWorkersPaymentWorking().add(workerPayment);
 
 			message.setAddressee(myAgent().findAssistant(Id.procesPlatba));
@@ -96,9 +92,6 @@ public class ManagerPokladni extends Manager
 			worker.setIdCustomer(-1);
 			worker.setCustomer(null);
 			myAgent().getWorkersPayment().add(worker);
-
-//			TODO STATS
-//			((Sem2) core).getAverageUsePercentPaymentStat().updateStatistics(core, ((Sem2) core).getWorkersPaymentWorking());
 			myAgent().getWorkersPaymentWorking().remove(worker);
 		} else {
 			// customer is waiting in queue for this worker -> new payment

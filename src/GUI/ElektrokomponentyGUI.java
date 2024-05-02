@@ -221,7 +221,7 @@ public class ElektrokomponentyGUI extends JFrame implements ActionListener, ISim
             this.simulation = new MySimulation(Integer.parseInt(textFieldOrderPlacesTurbo.getText()), Integer.parseInt(textFieldCashTurbo.getText()));
             this.simulation.registerDelegate(this);
             this.simulation.onReplicationWillStart((sim)
-                    ->{
+                    -> {
                 this.changeSpeed(this.simulation);
             });
             this.simulation.onReplicationDidFinish(sim -> refresh(sim));
@@ -259,7 +259,7 @@ public class ElektrokomponentyGUI extends JFrame implements ActionListener, ISim
             simulation = new MySimulation(Integer.parseInt(textFieldOrderPlacesWatchTime.getText()), Integer.parseInt(textFieldCashWatchTime.getText()));
             simulation.registerDelegate(this);
             this.simulation.onReplicationWillStart((sim)
-                    ->{
+                    -> {
                 this.changeSpeed(this.simulation);
             });
 
@@ -296,34 +296,32 @@ public class ElektrokomponentyGUI extends JFrame implements ActionListener, ISim
             this.pauseButtonGraph.setEnabled(true);
             this.endButtonGraph.setEnabled(true);
 
-//            threadSimulationOuter1 = new Thread(new Runnable() {
-//                public void run() {
-//
-//                    for (int i = 2; i <= 6; i++) {
-//                        simulation = new Sem2(Integer.parseInt(textFieldWorkersOrderGraph.getText()), i, 30600.0, true, 0);
-//                        simulation.setRunning(true);
-//
-//                        threadSimulationInner1 = new Thread(new Runnable() {
-//                            public void run() {
-//                                simulation.executeReplications(Integer.parseInt(textFieldReplicationsGraph.getText()));
-//                                series1.add(simulation.getNumberOfWorkersPayment(), simulation.getAverageNumberOfCustomersWaitingTicket());
-//                                chart1.fireChartChanged();
-//                            }
-//                        });
-//                        threadSimulationInner1.start();
-//
-//                        while (threadSimulationInner1.isAlive()) {
-//                            try {
-//                                Thread.sleep(1);
-//                            } catch (InterruptedException ex) {
-//                                return;
-//                            }
-//                        }
-//
-//                    }
-//                }
-//            });
-//            threadSimulationOuter1.start();
+            threadSimulationOuter1 = new Thread(new Runnable() {
+                public void run() {
+
+                    for (int i = 2; i <= 6; i++) {
+                        simulation = new MySimulation(Integer.parseInt(textFieldWorkersOrderGraph.getText()), i);
+
+                        threadSimulationInner1 = new Thread(new Runnable() {
+                            public void run() {
+                                simulation.simulate(Integer.parseInt(textFieldReplicationsGraph.getText()), Config.simEndTime);
+                                series1.add(simulation.getNumberOfWorkersPayment(), simulation.getNumberOfCustomersWaitingTicketStat().mean());
+                                chart1.fireChartChanged();
+                            }
+                        });
+                        threadSimulationInner1.start();
+
+                        while (threadSimulationInner1.isAlive()) {
+                            try {
+                                Thread.sleep(1);
+                            } catch (InterruptedException ex) {
+                                return;
+                            }
+                        }
+                    }
+                }
+            });
+            threadSimulationOuter1.start();
         } else if (e.getSource() == pauseButtonGraph) {
             if (simulation.isPaused()) {
                 simulation.resumeSimulation();
@@ -376,19 +374,19 @@ public class ElektrokomponentyGUI extends JFrame implements ActionListener, ISim
         if (turboMode) {
             this.executedReplicationsTurbo.setText(Integer.toString(((MySimulation) simulation).currentReplication()));
 
-            if (((MySimulation) simulation).currentReplication() > 2 ) {
+            if (((MySimulation) simulation).currentReplication() > 2) {
                 double[] confIntervalTimeInSystem95 = ((MySimulation) simulation).getTimeInSystemStat().confidenceInterval_95();
                 this.confIntervalTimeInSystemTurbo.setText("<" + String.format("%.3f", confIntervalTimeInSystem95[0])
                         + " ; " + String.format("%.3f", confIntervalTimeInSystem95[1])
                         + ">");
             }
             this.averageTimeSystemTurbo.setText(String.format("%.3f", ((MySimulation) simulation).getTimeInSystemStat().mean()) + " sekúnd / " + String.format("%.3f", ((MySimulation) simulation).getTimeInSystemStat().mean() / 60.0) + " minút");
-            //            this.averageNumberServedCustomersTurbo.setText(String.format("%.3f", simulation.getAverageServedCustomer()));
-//            this.averageTimeQueueTicketTurbo.setText(String.format(String.format("%.3f", simulation.getAverageTimeTicket()) + " sekúnd / " + "%.3f", simulation.getAverageTimeTicket() / 60.0) + " minút");
-//            this.averageNumberQueueTicketTurbo.setText(String.format("%.3f", simulation.getAverageNumberOfCustomersWaitingTicket()));
-//            this.averageUsePercTicketTurbo.setText(String.format("%.2f", simulation.getAverageUsePercentTicket()) + "%");
-//            this.averageUsePercOrderTurbo.setText(String.format("%.2f", simulation.getAverageUsePercentOrder()) + "%");
-//            this.averageUsePercPaymentTurbo.setText(String.format("%.2f", simulation.getAverageUsePercentPayment()) + "%");
+            this.averageNumberServedCustomersTurbo.setText(String.format("%.3f", ((MySimulation) simulation).getAverageServedCustomerStat().mean()));
+            this.averageTimeQueueTicketTurbo.setText(String.format("%.3f", ((MySimulation) simulation).getAverageTimeTicketStat().mean()) + " sekúnd / " + String.format("%.3f", ((MySimulation) simulation).getAverageTimeTicketStat().mean() / 60.0) + " minút");
+            this.averageNumberQueueTicketTurbo.setText(String.format("%.3f", ((MySimulation) simulation).getNumberOfCustomersWaitingTicketStat().mean()));
+            this.averageUsePercTicketTurbo.setText(String.format("%.2f", ((MySimulation) simulation).getAverageUsePercentTicketStat().mean() * 100.0) + "%");
+            this.averageUsePercOrderTurbo.setText(String.format("%.2f", ((MySimulation) simulation).getAverageUsePercentOrderStat().mean() * 100.0) + "%");
+            this.averageUsePercPaymentTurbo.setText(String.format("%.2f", ((MySimulation) simulation).getAverageUsePercentPaymentStat().mean() * 100.0) + "%");
 
             // Convert seconds to hours, minutes and remaining seconds
             long hours = TimeUnit.SECONDS.toHours((long) ((MySimulation) simulation).getTimeLastLeaveSystemStat().mean());
@@ -422,9 +420,9 @@ public class ElektrokomponentyGUI extends JFrame implements ActionListener, ISim
             this.numberCustomersPayment.setText(Integer.toString(numberCustomersPayment));
             this.executedReplications.setText(Integer.toString(simulation.currentReplication()));
 
-            this.numberCustomersIn.setText(Integer.toString(((MySimulation)simulation).agentOkolia().getCountCustomersIn()));
-            this.numberCustomersOut.setText(Integer.toString(((MySimulation)simulation).agentOkolia().getCountCustomersOut()));
-//            this.numberCustomersCurrent.setText(Integer.toString(simulation.getAllCustomers().size()));
+            this.numberCustomersIn.setText(Integer.toString(((MySimulation) simulation).agentOkolia().getCountCustomersIn()));
+            this.numberCustomersOut.setText(Integer.toString(((MySimulation) simulation).agentOkolia().getCountCustomersOut()));
+            this.numberCustomersCurrent.setText(Integer.toString(((MySimulation) simulation).agentOkolia().getAllCustomers().size()));
 
             try {
                 SwingUtilities.invokeAndWait(new Runnable() {
@@ -472,20 +470,20 @@ public class ElektrokomponentyGUI extends JFrame implements ActionListener, ISim
                         }
 
                         modelCustomersWaitingTicket.setRowCount(0);
-                        for (MessageForm mess :  ((MySimulation) simulation).agentAutomatu().get_queueCustomersTicketDispenser()) {
-                            modelCustomersWaitingTicket.addRow(new Object[]{((MyMessage)mess).getCustomer().getId()});
+                        for (MessageForm mess : ((MySimulation) simulation).agentAutomatu().get_queueCustomersTicketDispenser()) {
+                            modelCustomersWaitingTicket.addRow(new Object[]{((MyMessage) mess).getCustomer().getId()});
                         }
 
                         modelCustomerTicketDispenser.setRowCount(0);
                         for (MessageForm mess : ((MySimulation) simulation).agentAutomatu().get_customerInteractingWithTicketDispenser()) {
-                            modelCustomerTicketDispenser.addRow(new Object[]{((MyMessage)mess).getCustomer().getId()});
+                            modelCustomerTicketDispenser.addRow(new Object[]{((MyMessage) mess).getCustomer().getId()});
                         }
 
                         modelCustomersWaitingOrder.setRowCount(0);
                         for (MessageForm mess : ((MySimulation) simulation).agentObsluznychMiest().getCustomersWaitingInShopBeforeOrder()) {
-                            modelCustomersWaitingOrder.addRow(new Object[]{((MyMessage)mess).getCustomer().getId(), ((MyMessage)mess).getCustomer().getCustomerType(), ((MyMessage)mess).getCustomer().getTimeArrival()});
+                            modelCustomersWaitingOrder.addRow(new Object[]{((MyMessage) mess).getCustomer().getId(), ((MyMessage) mess).getCustomer().getCustomerType(), ((MyMessage) mess).getCustomer().getTimeArrival()});
                         }
-                        if(((MySimulation) simulation).agentObsluznychMiest().getCustomersWaitingInShopBeforeOrder().size() > 9) {
+                        if (((MySimulation) simulation).agentObsluznychMiest().getCustomersWaitingInShopBeforeOrder().size() > 9) {
                             System.out.println(((MySimulation) simulation).agentObsluznychMiest().getCustomersWaitingInShopBeforeOrder().size());
                         }
 
@@ -493,7 +491,7 @@ public class ElektrokomponentyGUI extends JFrame implements ActionListener, ISim
                         int index = 0;
                         for (SimQueue<MessageForm> queue : ((MySimulation) simulation).agentPokladni().getQueuesCustomersWaitingForPayment()) {
                             for (MessageForm mess : queue) {
-                                modelCustomersPayment.addRow(new Object[]{((MyMessage)mess).getCustomer().getId(), Integer.toString(index)});
+                                modelCustomersPayment.addRow(new Object[]{((MyMessage) mess).getCustomer().getId(), Integer.toString(index)});
                             }
                             index++;
                         }
@@ -506,7 +504,7 @@ public class ElektrokomponentyGUI extends JFrame implements ActionListener, ISim
                 throw new RuntimeException(e);
             }
 
-            if (((MySimulation) simulation).currentReplication() > 2 ) {
+            if (((MySimulation) simulation).currentReplication() > 2) {
                 double[] confIntervalTimeInSystem95 = ((MySimulation) simulation).getTimeInSystemStat().confidenceInterval_95();
                 this.confIntervalTimeInSystemWatchTime.setText("<" + String.format("%.3f", confIntervalTimeInSystem95[0])
                         + " ; " + String.format("%.3f", confIntervalTimeInSystem95[1])
@@ -514,12 +512,12 @@ public class ElektrokomponentyGUI extends JFrame implements ActionListener, ISim
             }
 
             this.averageTimeSystemWatchTime.setText(String.format("%.3f", ((MySimulation) simulation).getTimeInSystemStat().mean()) + " sekúnd / " + String.format("%.3f", ((MySimulation) simulation).getTimeInSystemStat().mean() / 60.0) + " minút");
-//            this.averageTimeQueueTicketWatchTime.setText(String.format(String.format("%.3f", simulation.getAverageTimeTicket()) + " sekúnd / " + "%.3f", simulation.getAverageTimeTicket() / 60.0) + " minút");
-//            this.averageNumberServedCustomersWatchTime.setText(String.format("%.3f", simulation.getAverageServedCustomer()));
-//            this.averageNumberQueueTicketWatchTime.setText(String.format("%.3f", simulation.getAverageNumberOfCustomersWaitingTicket()));
-//            this.averageUsePercTicketWatchTime.setText(String.format("%.2f", simulation.getAverageUsePercentTicket()) + "%");
-//            this.averageUsePercOrderWatchTime.setText(String.format("%.2f", simulation.getAverageUsePercentOrder()) + "%");
-//            this.averageUsePercPaymentWatchTime.setText(String.format("%.2f", simulation.getAverageUsePercentPayment()) + "%");
+            this.averageTimeQueueTicketWatchTime.setText(String.format("%.3f", ((MySimulation) simulation).getAverageTimeTicketStat().mean()) + " sekúnd / " + String.format("%.3f", ((MySimulation) simulation).getAverageTimeTicketStat().mean() / 60.0) + " minút");
+            this.averageNumberServedCustomersWatchTime.setText(String.format("%.3f", ((MySimulation) simulation).getAverageServedCustomerStat().mean()));
+            this.averageNumberQueueTicketWatchTime.setText(String.format("%.3f", ((MySimulation) simulation).getNumberOfCustomersWaitingTicketStat().mean()));
+            this.averageUsePercTicketWatchTime.setText(String.format("%.2f", ((MySimulation) simulation).getAverageUsePercentTicketStat().mean() * 100.0) + "%");
+            this.averageUsePercOrderWatchTime.setText(String.format("%.2f", ((MySimulation) simulation).getAverageUsePercentOrderStat().mean() * 100.0) + "%");
+            this.averageUsePercPaymentWatchTime.setText(String.format("%.2f", ((MySimulation) simulation).getAverageUsePercentPaymentStat().mean() * 100.0) + "%");
 
             // Convert seconds to hours, minutes and remaining seconds
             long hoursTimeLeaveSystem = TimeUnit.SECONDS.toHours((long) ((MySimulation) simulation).getTimeLastLeaveSystemStat().mean());

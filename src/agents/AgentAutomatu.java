@@ -14,6 +14,7 @@ public class AgentAutomatu extends Agent
 	private SimQueue< MessageForm > _queueCustomersTicketDispenser;
 	private SimQueue< MessageForm > _customerInteractingWithTicketDispenser;
 	private boolean _isOccupied;
+	private Stat averageTimeTicketStat;
 
 	public AgentAutomatu(int id, Simulation mySim, Agent parent)
 	{
@@ -31,6 +32,8 @@ public class AgentAutomatu extends Agent
 		_queueCustomersTicketDispenser = new SimQueue<>(new WStat(mySim()));
 		_customerInteractingWithTicketDispenser = new SimQueue<>(new WStat(mySim()));
 		_isOccupied = false;
+
+		averageTimeTicketStat = new Stat();
 	}
 
 	//meta! userInfo="Generated code: do not modify", tag="begin"
@@ -61,5 +64,9 @@ public class AgentAutomatu extends Agent
 
 	public void set_isOccupied(boolean _isOccupied) {
 		this._isOccupied = _isOccupied;
+	}
+
+	public Stat getAverageTimeTicketStat() {
+		return averageTimeTicketStat;
 	}
 }

@@ -7,14 +7,18 @@ import simulation.*;
 import managers.*;
 import continualAssistants.*;
 
+import java.util.LinkedList;
+
 //meta! id="3"
 public class AgentOkolia extends Agent
 {
 	private int countCustomersIn;
 	private int countCustomersOut;
+	private int countCustomersServed;;
 	private int highestCustomerID;
 	private Stat timeInSystemStat;
 	private Customer lastCustomer;
+	private LinkedList<Customer> allCustomers;
 
 	public AgentOkolia(int id, Simulation mySim, Agent parent)
 	{
@@ -30,9 +34,11 @@ public class AgentOkolia extends Agent
 		// Setup component for the next replication
 		this.countCustomersIn = 0;
 		this.countCustomersOut = 0;
+		this.countCustomersServed = 0;
 		this.highestCustomerID = 0;
 
 		this.lastCustomer = null;
+		this.allCustomers = new LinkedList<>();
 
 		timeInSystemStat = new Stat();
 	}
@@ -84,5 +90,17 @@ public class AgentOkolia extends Agent
 
 	public void setLastCustomer(Customer lastCustomer) {
 		this.lastCustomer = lastCustomer;
+	}
+
+	public void incServedCustomers() {
+		this.countCustomersServed++;
+	}
+
+	public int getCountCustomersServed() {
+		return countCustomersServed;
+	}
+
+	public LinkedList<Customer> getAllCustomers() {
+		return allCustomers;
 	}
 }
