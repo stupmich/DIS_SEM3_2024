@@ -78,11 +78,22 @@ public class MySimulation extends Simulation
 		this.averageTimeWaitingServiceStat.addSample(agentObsluznychMiest().getAverageTimeWaitingServiceStat().mean());
 		this.averageServedCustomerStat.addSample(agentOkolia().getCountCustomersServed());
 		this.averageTimeTicketStat.addSample(agentAutomatu().getAverageTimeTicketStat().mean());
+
+		agentAutomatu().get_queueCustomersTicketDispenser().lengthStatistic().updateAfterReplication();
 		this.numberOfCustomersWaitingTicketStat.addSample(agentAutomatu().get_queueCustomersTicketDispenser().lengthStatistic().mean());
+
+		agentAutomatu().get_customerInteractingWithTicketDispenser().lengthStatistic().updateAfterReplication();
 		this.averageUsePercentTicketStat.addSample(agentAutomatu().get_customerInteractingWithTicketDispenser().lengthStatistic().mean());
+
+		agentObsluznychMiest().getWorkersOrderWorkingNormal().lengthStatistic().updateAfterReplication();
 		double averageUsePercentOrderNormal = agentObsluznychMiest().getWorkersOrderWorkingNormal().lengthStatistic().mean();
+
+		agentObsluznychMiest().getWorkersOrderWorkingOnline().lengthStatistic().updateAfterReplication();
 		double averageUsePercentOrderOnline = agentObsluznychMiest().getWorkersOrderWorkingOnline().lengthStatistic().mean();
+
 		this.averageUsePercentOrderStat.addSample((averageUsePercentOrderNormal + averageUsePercentOrderOnline) / ((double)this.numberOfWorkersOrder));
+
+		agentPokladni().getWorkersPaymentWorking().lengthStatistic().updateAfterReplication();
 		this.averageUsePercentPaymentStat.addSample(agentPokladni().getWorkersPaymentWorking().lengthStatistic().mean() / ((double)this.numberOfWorkersPayment));
 	}
 
