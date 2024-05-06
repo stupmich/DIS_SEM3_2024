@@ -74,6 +74,8 @@ public class ManagerElektra extends Manager
 	//meta! sender="AgentAutomatu", id="26", type="Response"
 	public void processVydanieListku(MessageForm message)
 	{
+//		message.setCode(Mc.obsluhaZakaznika);
+//		response(message);
 		if (((MyMessage)message).getCustomer().isNotServed()) {
 			message.setCode(Mc.obsluhaZakaznika);
 			response(message);

@@ -31,6 +31,7 @@ public class ProcesInterakciaAutomat extends Process
 	{
 		message.setCode(Mc.koniecInterakcie);
 		hold(durationInteractionGenerator.nextDouble(30.0,120.0), message);
+//		hold(30.0, message);
 	}
 
 	//meta! userInfo="Process messages defined in code", id="0"

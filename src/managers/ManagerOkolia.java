@@ -94,7 +94,6 @@ public class ManagerOkolia extends Manager
 			myAgent().setLastCustomer(leavingCustomer);
 			myAgent().incServedCustomers();
 
-
 			double timeInSystem = leavingCustomer.getTimeLeaveSystem() - leavingCustomer.getTimeArrival();
 			myAgent().getTimeInSystemStat().addSample(timeInSystem);
 		}

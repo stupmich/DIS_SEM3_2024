@@ -33,6 +33,7 @@ public class PlanovacPrichodovZakaznikovValidMod extends Scheduler
 	{
 		message.setCode(Mc.novyZakaznik);
 		hold(_exp.sample(), message);
+//		hold(0.0, message);
 	}
 
 	//meta! userInfo="Process messages defined in code", id="0"
@@ -43,26 +44,16 @@ public class PlanovacPrichodovZakaznikovValidMod extends Scheduler
 			case Mc.novyZakaznik:
 				double next = _exp.sample();
 				next = next * 60.0;
+//				next = 30.0;
 
 				if (mySim().currentTime() + next <= Config.closeTicketDispenserTime) {
 					MessageForm copy = message.createCopy();
 					hold(next, copy);
-
-					double type = this.customerTypeRand.nextDouble();
-					if (type < 0.5) {
-						Customer newCustomer = new Customer(myAgent().getHighestCustomerID(), _mySim, mySim().currentTime(), Customer.CustomerType.REGULAR);
-						((MyMessage) message).setCustomer(newCustomer);
-					} else if (type < 0.65) {
-						Customer newCustomer = new Customer(myAgent().getHighestCustomerID(), _mySim, mySim().currentTime(), Customer.CustomerType.CONTRACT);
-						((MyMessage) message).setCustomer(newCustomer);
-					} else {
-						Customer newCustomer = new Customer(myAgent().getHighestCustomerID(), _mySim, mySim().currentTime(), Customer.CustomerType.ONLINE);
-						((MyMessage) message).setCustomer(newCustomer);
-					}
-					myAgent().incHighestCustomerID();
-
-					assistantFinished(message);
 				}
+
+				this.createCustomer(message);
+				assistantFinished(message);
+
 				break;
 		}
 	}
@@ -90,4 +81,18 @@ public class PlanovacPrichodovZakaznikovValidMod extends Scheduler
 		return (AgentOkolia)super.myAgent();
 	}
 
+	public void createCustomer(MessageForm message) {
+		double type = this.customerTypeRand.nextDouble();
+		if (type < 0.5) {
+			Customer newCustomer = new Customer(myAgent().getHighestCustomerID(), _mySim, mySim().currentTime(), Customer.CustomerType.REGULAR);
+			((MyMessage) message).setCustomer(newCustomer);
+		} else if (type < 0.65) {
+			Customer newCustomer = new Customer(myAgent().getHighestCustomerID(), _mySim, mySim().currentTime(), Customer.CustomerType.CONTRACT);
+			((MyMessage) message).setCustomer(newCustomer);
+		} else {
+			Customer newCustomer = new Customer(myAgent().getHighestCustomerID(), _mySim, mySim().currentTime(), Customer.CustomerType.ONLINE);
+			((MyMessage) message).setCustomer(newCustomer);
+		}
+		myAgent().incHighestCustomerID();
+	}
 }
