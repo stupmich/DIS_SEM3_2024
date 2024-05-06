@@ -27,7 +27,8 @@ public class ManagerAutomatu extends Manager {
         myAgent().set_isOccupied(false);
         myAgent().get_customerInteractingWithTicketDispenser().remove(message);
 
-
+        message.setCode(Mc.vydanieListku);
+        response(message);
 
         if (myAgent().get_queueCustomersTicketDispenser().size() > 0) {
             MyMessage nextMessage = new MyMessage(((MyMessage) message));
@@ -37,9 +38,6 @@ public class ManagerAutomatu extends Manager {
 
             request(nextMessage);
         }
-
-        message.setCode(Mc.vydanieListku);
-        response(message);
     }
 
 	//meta! sender="AgentElektra", id="26", type="Request"

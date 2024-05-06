@@ -32,8 +32,7 @@ public class PlanovacPrichodovZakaznikovValidMod extends Scheduler
 	public void processStart(MessageForm message)
 	{
 		message.setCode(Mc.novyZakaznik);
-		hold(_exp.sample(), message);
-//		hold(0.0, message);
+		hold(_exp.sample() * 60.0, message);
 	}
 
 	//meta! userInfo="Process messages defined in code", id="0"
@@ -44,7 +43,6 @@ public class PlanovacPrichodovZakaznikovValidMod extends Scheduler
 			case Mc.novyZakaznik:
 				double next = _exp.sample();
 				next = next * 60.0;
-//				next = 30.0;
 
 				if (mySim().currentTime() + next <= Config.closeTicketDispenserTime) {
 					MessageForm copy = message.createCopy();
