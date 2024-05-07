@@ -48,6 +48,17 @@ public class ManagerPokladni extends Manager
 	//meta! sender="AgentElektra", id="22", type="Notice"
 	public void processJeCasObedu(MessageForm message)
 	{
+		myAgent().getWorkersPaymentLunch().addAll(myAgent().getWorkersPayment());
+		myAgent().getWorkersPayment().clear();
+		myAgent().setLunchTime(true);
+
+		for (Worker worker : myAgent().getWorkersPaymentLunch()) {
+			if (worker.getId() != 0) {
+				myAgent().getQueuesCustomersWaitingForPayment().get(0).addAll(myAgent().getQueuesCustomersWaitingForPayment().get(worker.getId()));
+			}
+		}
+		// TODO MOZNO SORT PODLA CASU ZACIATKU CAKANIA
+
 	}
 
 	//meta! sender="AgentElektra", id="29", type="Request"
@@ -83,27 +94,40 @@ public class ManagerPokladni extends Manager
 	}
 
 	//meta! sender="ProcesPlatba", id="54", type="Finish"
-	public void processFinish(MessageForm message)
-	{
-		Worker worker = ((MyMessage)message).getWorker();
+	public void processFinish(MessageForm message) {
+		Worker worker = ((MyMessage) message).getWorker();
 
-		if (myAgent().getQueuesCustomersWaitingForPayment().get(worker.getId()).isEmpty()) {
-			// no customers in queue for this worker -> worker free
+		if (myAgent().isLunchTime() && worker.getType() == Worker.WorkerType.PAYMENT) {
 			worker.setIdCustomer(-1);
 			worker.setCustomer(null);
-			myAgent().getWorkersPayment().add(worker);
-			myAgent().getWorkersPaymentWorking().remove(worker);
+			myAgent().getWorkersPaymentLunch().add(worker);
+
+			if (worker.getId() != 0) {
+				myAgent().getQueuesCustomersWaitingForPayment().get(0).addAll(myAgent().getQueuesCustomersWaitingForPayment().get(worker.getId()));
+				myAgent().getWorkersPaymentWorking().remove(worker);
+			}
+		} else if (!myAgent().isLunchTime() && worker.getType() != Worker.WorkerType.PAYMENT) {
+
+
 		} else {
-			// customer is waiting in queue for this worker -> new payment
-			MessageForm nextCustomerMessage = myAgent().getQueuesCustomersWaitingForPayment().get(worker.getId()).removeFirst();
-			Customer nextCustomer = ((MyMessage)nextCustomerMessage).getCustomer();
+			if (myAgent().getQueuesCustomersWaitingForPayment().get(worker.getId()).isEmpty()) {
+				// no customers in queue for this worker -> worker free
+				worker.setIdCustomer(-1);
+				worker.setCustomer(null);
+				myAgent().getWorkersPayment().add(worker);
+				myAgent().getWorkersPaymentWorking().remove(worker);
+			} else {
+				// customer is waiting in queue for this worker -> new payment
+				MessageForm nextCustomerMessage = myAgent().getQueuesCustomersWaitingForPayment().get(worker.getId()).removeFirst();
+				Customer nextCustomer = ((MyMessage)nextCustomerMessage).getCustomer();
 
-			worker.setIdCustomer(nextCustomer.getId());
-			worker.setCustomer(nextCustomer);
+				worker.setIdCustomer(nextCustomer.getId());
+				worker.setCustomer(nextCustomer);
 
-			nextCustomerMessage.setAddressee(myAgent().findAssistant(Id.procesPlatba));
-			((MyMessage) nextCustomerMessage).setWorker(worker);
-			startContinualAssistant(nextCustomerMessage);
+				nextCustomerMessage.setAddressee(myAgent().findAssistant(Id.procesPlatba));
+				((MyMessage) nextCustomerMessage).setWorker(worker);
+				startContinualAssistant(nextCustomerMessage);
+			}
 		}
 
 		message.setCode(Mc.platenie);
@@ -117,6 +141,30 @@ public class ManagerPokladni extends Manager
 		switch (message.code())
 		{
 		}
+	}
+
+	//meta! sender="AgentElektra", id="91", type="Notice"
+	public void processJeKoniecCasuObedu(MessageForm message)
+	{
+		myAgent().setLunchTime(false);
+
+		if (myAgent().getWorkersPaymentWorking().size() != 0) {
+			Worker workerFirstCashier = null;
+
+			for ( Worker workerLunch : myAgent().getWorkersPaymentLunch()) {
+				if (workerLunch.getId() == 0) {
+					workerFirstCashier = workerLunch;
+				}
+			}
+			myAgent().getWorkersPaymentLunch().remove(workerFirstCashier);
+		} else {
+			Worker workerFromService = myAgent().getWorkersPayment().removeFirst();
+			//todo poslat message do agenta ob miest a vratit pracovnika
+		}
+
+		myAgent().getWorkersPayment().addAll(myAgent().getWorkersPaymentLunch());
+		myAgent().getWorkersPaymentLunch().clear();
+
 	}
 
 	//meta! userInfo="Generated code: do not modify", tag="begin"
@@ -133,12 +181,16 @@ public class ManagerPokladni extends Manager
 			processFinish(message);
 		break;
 
+		case Mc.jeCasObedu:
+			processJeCasObedu(message);
+		break;
+
 		case Mc.platenie:
 			processPlatenie(message);
 		break;
 
-		case Mc.jeCasObedu:
-			processJeCasObedu(message);
+		case Mc.jeKoniecCasuObedu:
+			processJeKoniecCasuObedu(message);
 		break;
 
 		default:
@@ -155,26 +207,30 @@ public class ManagerPokladni extends Manager
 	}
 
 	public void addCustomerToQueue(MessageForm mess) {
-		int minQueueLength = Integer.MAX_VALUE;
-		SimQueue<SimQueue< MessageForm >> shortestQueues = new SimQueue<>();
-
-		// get shortest queues
-		for (SimQueue<MessageForm> queue : myAgent().getQueuesCustomersWaitingForPayment()) {
-			if (queue.size() < minQueueLength) {
-				shortestQueues.clear();
-				shortestQueues.add(queue);
-				minQueueLength = queue.size();
-			} else if (queue.size() == minQueueLength) {
-				shortestQueues.add(queue);
-			}
-		}
-
-		// pick randomly queue where customer goes
-		if (shortestQueues.size() == 1 ) {
-			shortestQueues.get(0).add(mess);
+		if (myAgent().isLunchTime()) {
+			myAgent().getQueuesCustomersWaitingForPayment().get(0).add(mess);
 		} else {
-			int selectedQueueIndex = this.indexPaymentSameLengthOfQueueGenerator[shortestQueues.size() - 2].nextInt(0, shortestQueues.size());
-			shortestQueues.get(selectedQueueIndex).add(mess);
+			int minQueueLength = Integer.MAX_VALUE;
+			SimQueue<SimQueue< MessageForm >> shortestQueues = new SimQueue<>();
+
+			// get shortest queues
+			for (SimQueue<MessageForm> queue : myAgent().getQueuesCustomersWaitingForPayment()) {
+				if (queue.size() < minQueueLength) {
+					shortestQueues.clear();
+					shortestQueues.add(queue);
+					minQueueLength = queue.size();
+				} else if (queue.size() == minQueueLength) {
+					shortestQueues.add(queue);
+				}
+			}
+
+			// pick randomly queue where customer goes
+			if (shortestQueues.size() == 1 ) {
+				shortestQueues.get(0).add(mess);
+			} else {
+				int selectedQueueIndex = this.indexPaymentSameLengthOfQueueGenerator[shortestQueues.size() - 2].nextInt(0, shortestQueues.size());
+				shortestQueues.get(selectedQueueIndex).add(mess);
+			}
 		}
 	}
 }

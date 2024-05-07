@@ -23,7 +23,7 @@ public class PlanovacZatvoreniaAutomatu extends Scheduler
 	public void processStart(MessageForm message)
 	{
 		message.setCode(Mc.zatvorenieAutomatu);
-		hold(28800.0, message);
+		hold(Config.closeTicketDispenserTime, message);
 	}
 
 	//meta! userInfo="Process messages defined in code", id="0"

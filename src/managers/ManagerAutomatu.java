@@ -106,6 +106,11 @@ public class ManagerAutomatu extends Manager {
         startContinualAssistant(message);
 	}
 
+	//meta! userInfo="Removed from model"
+	public void processJeKoniecCasuObedu(MessageForm message)
+	{
+	}
+
 	//meta! userInfo="Generated code: do not modify", tag="begin"
 	public void init()
 	{
@@ -124,14 +129,6 @@ public class ManagerAutomatu extends Manager {
 			processDajPocetMiestVCakarni(message);
 		break;
 
-		case Mc.vydanieListku:
-			processVydanieListku(message);
-		break;
-
-		case Mc.inicializuj:
-			processInicializuj(message);
-		break;
-
 		case Mc.finish:
 			switch (message.sender().id())
 			{
@@ -143,6 +140,14 @@ public class ManagerAutomatu extends Manager {
 				processFinishProcesInterakciaAutomat(message);
 			break;
 			}
+		break;
+
+		case Mc.vydanieListku:
+			processVydanieListku(message);
+		break;
+
+		case Mc.inicializuj:
+			processInicializuj(message);
 		break;
 
 		default:

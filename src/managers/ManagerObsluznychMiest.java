@@ -147,6 +147,11 @@ public class ManagerObsluznychMiest extends Manager {
         response(message);
     }
 
+	//meta! sender="AgentElektra", id="94", type="Notice"
+	public void processJeKoniecCasuObedu(MessageForm message)
+	{
+	}
+
 	//meta! userInfo="Generated code: do not modify", tag="begin"
 	public void init()
 	{
@@ -160,6 +165,10 @@ public class ManagerObsluznychMiest extends Manager {
 		case Mc.finish:
 			switch (message.sender().id())
 			{
+			case Id.procesPripravaObjednavky:
+				processFinishProcesPripravaObjednavky(message);
+			break;
+
 			case Id.procesVyzdvihnutieVelkehoTovaru:
 				processFinishProcesVyzdvihnutieVelkehoTovaru(message);
 			break;
@@ -167,19 +176,11 @@ public class ManagerObsluznychMiest extends Manager {
 			case Id.procesDiktovanieObjednavky:
 				processFinishProcesDiktovanieObjednavky(message);
 			break;
-
-			case Id.procesPripravaObjednavky:
-				processFinishProcesPripravaObjednavky(message);
-			break;
 			}
 		break;
 
-		case Mc.dajPocetMiestVCakarni:
-			processDajPocetMiestVCakarni(message);
-		break;
-
-		case Mc.jeCasObedu:
-			processJeCasObedu(message);
+		case Mc.jeKoniecCasuObedu:
+			processJeKoniecCasuObedu(message);
 		break;
 
 		case Mc.vyzdvihnutieVelkejObjednavky:
@@ -188,6 +189,14 @@ public class ManagerObsluznychMiest extends Manager {
 
 		case Mc.pripravaObjednavky:
 			processPripravaObjednavky(message);
+		break;
+
+		case Mc.jeCasObedu:
+			processJeCasObedu(message);
+		break;
+
+		case Mc.dajPocetMiestVCakarni:
+			processDajPocetMiestVCakarni(message);
 		break;
 
 		default:

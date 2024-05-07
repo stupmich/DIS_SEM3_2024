@@ -12,6 +12,8 @@ public class AgentObed extends Agent
 	{
 		super(id, mySim, parent);
 		init();
+		addOwnMessage(Mc.zacatieObednajsejPrestavky);
+		addOwnMessage(Mc.skoncenieObednajsejPrestavky);
 	}
 
 	@Override
@@ -25,6 +27,9 @@ public class AgentObed extends Agent
 	private void init()
 	{
 		new ManagerObed(Id.managerObed, mySim(), this);
+		new PlanovacZaciatkuObedu(Id.planovacZaciatkuObedu, mySim(), this);
+		new PlanovacKoncaObedu(Id.planovacKoncaObedu, mySim(), this);
+		addOwnMessage(Mc.inicializuj);
 	}
 	//meta! tag="end"
 }

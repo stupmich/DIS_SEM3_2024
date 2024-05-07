@@ -17,7 +17,9 @@ public class AgentPokladni extends Agent
 	private int highestWorkersPaymentID;
 	private SimQueue<Worker> workersPayment;
 	private SimQueue<Worker> workersPaymentWorking;
+	private SimQueue<Worker> workersPaymentLunch;
 	private SimQueue<SimQueue< MessageForm >> queuesCustomersWaitingForPayment;
+	private boolean lunchTime = false;
 
 	public AgentPokladni(int id, Simulation mySim, Agent parent)
 	{
@@ -45,6 +47,8 @@ public class AgentPokladni extends Agent
 		for (int i = 0; i < ((MySimulation)mySim()).getNumberOfWorkersPayment(); i++) {
 			this.queuesCustomersWaitingForPayment.add(new SimQueue<MessageForm>());
 		}
+
+		this.workersPaymentLunch = new SimQueue<Worker>();
 	}
 
 	//meta! userInfo="Generated code: do not modify", tag="begin"
@@ -54,6 +58,7 @@ public class AgentPokladni extends Agent
 		new ProcesPlatba(Id.procesPlatba, mySim(), this);
 		addOwnMessage(Mc.jeCasObedu);
 		addOwnMessage(Mc.platenie);
+		addOwnMessage(Mc.jeKoniecCasuObedu);
 	}
 	//meta! tag="end"
 
@@ -68,5 +73,17 @@ public class AgentPokladni extends Agent
 
 	public SimQueue<SimQueue<MessageForm>> getQueuesCustomersWaitingForPayment() {
 		return queuesCustomersWaitingForPayment;
+	}
+
+	public SimQueue<Worker> getWorkersPaymentLunch() {
+		return workersPaymentLunch;
+	}
+
+	public boolean isLunchTime() {
+		return lunchTime;
+	}
+
+	public void setLunchTime(boolean lunchTime) {
+		this.lunchTime = lunchTime;
 	}
 }

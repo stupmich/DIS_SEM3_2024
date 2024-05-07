@@ -34,6 +34,7 @@ public class AgentElektra extends Agent
 		addOwnMessage(Mc.platenie);
 		addOwnMessage(Mc.uvolniloSaMiesto);
 		addOwnMessage(Mc.vydanieListku);
+		addOwnMessage(Mc.jeKoniecCasuObedu);
 	}
 	//meta! tag="end"
 }

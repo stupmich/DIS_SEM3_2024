@@ -28,6 +28,8 @@ public class Id extends IdList
 	public static final int procesPripravaObjednavky = 1006;
 	public static final int procesVyzdvihnutieVelkehoTovaru = 1007;
 	public static final int procesDiktovanieObjednavky = 1008;
+	public static final int planovacZaciatkuObedu = 1011;
 	public static final int procesPlatba = 1009;
+	public static final int planovacKoncaObedu = 1012;
 	//meta! tag="end"
 }

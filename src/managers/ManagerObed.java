@@ -34,6 +34,33 @@ public class ManagerObed extends Manager
 		}
 	}
 
+	//meta! sender="AgentElektra", id="81", type="Notice"
+	public void processInicializuj(MessageForm message)
+	{
+		message.setAddressee(myAgent().findAssistant(Id.planovacZaciatkuObedu));
+		startContinualAssistant(message);
+	}
+
+	//meta! sender="PlanovacZaciatkuObedu", id="83", type="Finish"
+	public void processFinishPlanovacZaciatkuObedu(MessageForm message)
+	{
+		message.setAddressee(myAgent().findAssistant(Id.planovacKoncaObedu));
+		startContinualAssistant(message);
+
+		MyMessage nextMessage = new MyMessage(((MyMessage) message));
+		nextMessage.setCode(Mc.jeCasObedu);
+		nextMessage.setAddressee(mySim().findAgent(Id.agentElektra));
+		notice(nextMessage);
+	}
+
+	//meta! sender="PlanovacKoncaObedu", id="88", type="Finish"
+	public void processFinishPlanovacKoncaObedu(MessageForm message)
+	{
+		message.setCode(Mc.jeKoniecCasuObedu);
+		message.setAddressee(mySim().findAgent(Id.agentElektra));
+		notice(message);
+	}
+
 	//meta! userInfo="Generated code: do not modify", tag="begin"
 	public void init()
 	{
@@ -44,6 +71,23 @@ public class ManagerObed extends Manager
 	{
 		switch (message.code())
 		{
+		case Mc.finish:
+			switch (message.sender().id())
+			{
+			case Id.planovacKoncaObedu:
+				processFinishPlanovacKoncaObedu(message);
+			break;
+
+			case Id.planovacZaciatkuObedu:
+				processFinishPlanovacZaciatkuObedu(message);
+			break;
+			}
+		break;
+
+		case Mc.inicializuj:
+			processInicializuj(message);
+		break;
+
 		default:
 			processDefault(message);
 		break;

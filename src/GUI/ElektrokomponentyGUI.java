@@ -106,12 +106,14 @@ public class ElektrokomponentyGUI extends JFrame implements ActionListener, ISim
     private JCheckBox checkBoxValidationModeWatchTime;
     private JCheckBox checkBoxValidationModeTurboMode;
     private JCheckBox checkBoxValidationGraph;
+    private JTable tableLunchW2;
     private MySimulation simulation;
     private boolean turboMode;
     private DefaultTableModel modelWorkersOrder;
     private DefaultTableModel modelWorkersPayment;
     private DefaultTableModel modelWorkersOrderW;
     private DefaultTableModel modelWorkersPaymentW;
+    private DefaultTableModel modelWorkersPaymentL;
     private DefaultTableModel modelCustomersWaitingTicket;
     private DefaultTableModel modelCustomersWaitingOrder;
     private DefaultTableModel modelCustomersPayment;
@@ -158,6 +160,10 @@ public class ElektrokomponentyGUI extends JFrame implements ActionListener, ISim
         modelWorkersPaymentW.addColumn("Worker ID");
         modelWorkersPaymentW.addColumn("Customer ID");
         tableWorkingW2.setModel(modelWorkersPaymentW);
+
+        modelWorkersPaymentL = new DefaultTableModel();
+        modelWorkersPaymentL.addColumn("Worker ID");
+        tableLunchW2.setModel(modelWorkersPaymentL);
 
         modelCustomersWaitingTicket = new DefaultTableModel();
         modelCustomersWaitingTicket.addColumn("Customer ID");
@@ -522,6 +528,11 @@ public class ElektrokomponentyGUI extends JFrame implements ActionListener, ISim
                         modelWorkersPaymentW.setRowCount(0);
                         for (Worker worker : ((MySimulation) simulation).agentPokladni().getWorkersPaymentWorking()) {
                             modelWorkersPaymentW.addRow(new Object[]{worker.getId(), Integer.toString(worker.getIdCustomer())});
+                        }
+
+                        modelWorkersPaymentL.setRowCount(0);
+                        for (Worker worker : ((MySimulation) simulation).agentPokladni().getWorkersPaymentLunch()) {
+                            modelWorkersPaymentL.addRow(new Object[]{worker.getId()});
                         }
 
                         modelCustomersWaitingTicket.setRowCount(0);

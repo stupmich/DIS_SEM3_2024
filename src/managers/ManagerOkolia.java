@@ -121,10 +121,6 @@ public class ManagerOkolia extends Manager
 	{
 		switch (message.code())
 		{
-		case Mc.inicializuj:
-			processInicializuj(message);
-		break;
-
 		case Mc.odchodZakaznika:
 			processOdchodZakaznika(message);
 		break;
@@ -132,22 +128,26 @@ public class ManagerOkolia extends Manager
 		case Mc.finish:
 			switch (message.sender().id())
 			{
-			case Id.planovacPrichodovZakaznikovValidMod:
-				processFinishPlanovacPrichodovZakaznikovValidMod(message);
-			break;
-
-			case Id.planovacPrichodovBeznychZakaznikov:
-				processFinishPlanovacPrichodovBeznychZakaznikov(message);
-			break;
-
 			case Id.planovacPrichodovZmluvnychZakaznikov:
 				processFinishPlanovacPrichodovZmluvnychZakaznikov(message);
+			break;
+
+			case Id.planovacPrichodovZakaznikovValidMod:
+				processFinishPlanovacPrichodovZakaznikovValidMod(message);
 			break;
 
 			case Id.planovacPrichodovOnlineZakaznikov:
 				processFinishPlanovacPrichodovOnlineZakaznikov(message);
 			break;
+
+			case Id.planovacPrichodovBeznychZakaznikov:
+				processFinishPlanovacPrichodovBeznychZakaznikov(message);
+			break;
 			}
+		break;
+
+		case Mc.inicializuj:
+			processInicializuj(message);
 		break;
 
 		default:

@@ -40,8 +40,8 @@ public class AgentAutomatu extends Agent
 	private void init()
 	{
 		new ManagerAutomatu(Id.managerAutomatu, mySim(), this);
-		new ProcesInterakciaAutomat(Id.procesInterakciaAutomat, mySim(), this);
 		new PlanovacZatvoreniaAutomatu(Id.planovacZatvoreniaAutomatu, mySim(), this);
+		new ProcesInterakciaAutomat(Id.procesInterakciaAutomat, mySim(), this);
 		addOwnMessage(Mc.inicializuj);
 		addOwnMessage(Mc.dajPocetMiestVCakarni);
 		addOwnMessage(Mc.uvolniloSaMiesto);

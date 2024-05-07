@@ -10,6 +10,7 @@ public class Mc extends IdList
 	public static final int odchodZakaznika = 1003;
 	public static final int obsluhaZakaznika = 1004;
 	public static final int jeCasObedu = 1005;
+	public static final int jeKoniecCasuObedu = 1019;
 	public static final int vydanieListku = 1008;
 	public static final int pripravaObjednavky = 1009;
 	public static final int platenie = 1010;
@@ -26,4 +27,6 @@ public class Mc extends IdList
 	public static final int koniecPlatby = 5;
 	public static final int koniecVyzdvihnutiaVelkejObjednavky = 6;
 	public static final int zatvorenieAutomatu = 7;
+	public static final int zacatieObednajsejPrestavky = 8;
+	public static final int skoncenieObednajsejPrestavky = 9;
 }

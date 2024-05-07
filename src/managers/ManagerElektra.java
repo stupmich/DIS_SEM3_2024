@@ -30,6 +30,12 @@ public class ManagerElektra extends Manager
 	//meta! sender="AgentObed", id="20", type="Notice"
 	public void processJeCasObedu(MessageForm message)
 	{
+		message.setAddressee(mySim().findAgent(Id.agentObsluznychMiest));
+		notice(message);
+
+		MyMessage nextMessage = new MyMessage(((MyMessage) message));
+		nextMessage.setAddressee(mySim().findAgent(Id.agentPokladni));
+		notice(nextMessage);
 	}
 
 	//meta! sender="AgentObsluznychMiest", id="27", type="Response"
@@ -118,6 +124,23 @@ public class ManagerElektra extends Manager
 	{
 		message.setAddressee(mySim().findAgent(Id.agentAutomatu));
 		notice(message);
+
+		if (!((MySimulation)mySim()).isValidationMode()) {
+			MyMessage nextMessage = new MyMessage(((MyMessage) message));
+			nextMessage.setAddressee(mySim().findAgent(Id.agentObed));
+			notice(nextMessage);
+		}
+	}
+
+	//meta! sender="AgentObed", id="89", type="Notice"
+	public void processJeKoniecCasuObedu(MessageForm message)
+	{
+		message.setAddressee(mySim().findAgent(Id.agentObsluznychMiest));
+		notice(message);
+
+		MyMessage nextMessage = new MyMessage(((MyMessage) message));
+		nextMessage.setAddressee(mySim().findAgent(Id.agentPokladni));
+		notice(nextMessage);
 	}
 
 	//meta! userInfo="Generated code: do not modify", tag="begin"
@@ -130,6 +153,18 @@ public class ManagerElektra extends Manager
 	{
 		switch (message.code())
 		{
+		case Mc.jeCasObedu:
+			processJeCasObedu(message);
+		break;
+
+		case Mc.inicializuj:
+			processInicializuj(message);
+		break;
+
+		case Mc.vyzdvihnutieVelkejObjednavky:
+			processVyzdvihnutieVelkejObjednavky(message);
+		break;
+
 		case Mc.dajPocetMiestVCakarni:
 			switch (message.sender().id())
 			{
@@ -143,36 +178,28 @@ public class ManagerElektra extends Manager
 			}
 		break;
 
+		case Mc.pripravaObjednavky:
+			processPripravaObjednavky(message);
+		break;
+
 		case Mc.vydanieListku:
 			processVydanieListku(message);
-		break;
-
-		case Mc.jeCasObedu:
-			processJeCasObedu(message);
-		break;
-
-		case Mc.uvolniloSaMiesto:
-			processUvolniloSaMiesto(message);
-		break;
-
-		case Mc.inicializuj:
-			processInicializuj(message);
-		break;
-
-		case Mc.platenie:
-			processPlatenie(message);
 		break;
 
 		case Mc.obsluhaZakaznika:
 			processObsluhaZakaznika(message);
 		break;
 
-		case Mc.vyzdvihnutieVelkejObjednavky:
-			processVyzdvihnutieVelkejObjednavky(message);
+		case Mc.uvolniloSaMiesto:
+			processUvolniloSaMiesto(message);
 		break;
 
-		case Mc.pripravaObjednavky:
-			processPripravaObjednavky(message);
+		case Mc.platenie:
+			processPlatenie(message);
+		break;
+
+		case Mc.jeKoniecCasuObedu:
+			processJeKoniecCasuObedu(message);
 		break;
 
 		default:
