@@ -28,7 +28,7 @@ public class PlanovacPrichodovOnlineZakaznikov extends Scheduler
 	public void processStart(MessageForm message)
 	{
 		message.setCode(Mc.novyZakaznik);
-		hold(_exp.sample(), message);
+		hold(_exp.sample() * 60.0, message);
 	}
 
 	//meta! userInfo="Process messages defined in code", id="0"
@@ -43,13 +43,14 @@ public class PlanovacPrichodovOnlineZakaznikov extends Scheduler
 				if (mySim().currentTime() + next <= Config.closeTicketDispenserTime) {
 					MessageForm copy = message.createCopy();
 					hold(next, copy);
-
-					Customer newCustomer = new Customer(myAgent().getHighestCustomerID(), _mySim, mySim().currentTime(), Customer.CustomerType.ONLINE);
-					myAgent().incHighestCustomerID();
-
-					((MyMessage)message).setCustomer(newCustomer);
-					assistantFinished(message);
 				}
+
+				Customer newCustomer = new Customer(myAgent().getHighestCustomerID(), _mySim, mySim().currentTime(), Customer.CustomerType.ONLINE);
+				myAgent().incHighestCustomerID();
+				((MyMessage)message).setCustomer(newCustomer);
+
+				assistantFinished(message);
+
 				break;
 		}
 	}

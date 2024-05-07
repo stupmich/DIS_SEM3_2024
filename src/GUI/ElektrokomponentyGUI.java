@@ -15,7 +15,6 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
-import simulation.Config;
 import simulation.MyMessage;
 import simulation.MySimulation;
 
@@ -104,6 +103,9 @@ public class ElektrokomponentyGUI extends JFrame implements ActionListener, ISim
     private JLabel confIntervalAverageTimeLeaveSystemTurbo;
     private JLabel confIntervalAverageUsePercPaymentTurbo;
     private JLabel confIntervalAverageUsePercOrderTurbo;
+    private JCheckBox checkBoxValidationModeWatchTime;
+    private JCheckBox checkBoxValidationModeTurboMode;
+    private JCheckBox checkBoxValidationGraph;
     private MySimulation simulation;
     private boolean turboMode;
     private DefaultTableModel modelWorkersOrder;
@@ -225,7 +227,7 @@ public class ElektrokomponentyGUI extends JFrame implements ActionListener, ISim
             this.pauseButtonGraph.setEnabled(false);
             this.endButtonGraph.setEnabled(false);
 
-            this.simulation = new MySimulation(Integer.parseInt(textFieldOrderPlacesTurbo.getText()), Integer.parseInt(textFieldCashTurbo.getText()));
+            this.simulation = new MySimulation(Integer.parseInt(textFieldOrderPlacesTurbo.getText()), Integer.parseInt(textFieldCashTurbo.getText()), checkBoxValidationModeTurboMode.isSelected());
             this.simulation.registerDelegate(this);
             this.simulation.onReplicationWillStart((sim)
                     -> {
@@ -263,7 +265,7 @@ public class ElektrokomponentyGUI extends JFrame implements ActionListener, ISim
             this.pauseButtonGraph.setEnabled(false);
             this.endButtonGraph.setEnabled(false);
 
-            simulation = new MySimulation(Integer.parseInt(textFieldOrderPlacesWatchTime.getText()), Integer.parseInt(textFieldCashWatchTime.getText()));
+            simulation = new MySimulation(Integer.parseInt(textFieldOrderPlacesWatchTime.getText()), Integer.parseInt(textFieldCashWatchTime.getText()), checkBoxValidationModeWatchTime.isSelected());
             simulation.registerDelegate(this);
             this.simulation.onReplicationWillStart((sim)
                     -> {
@@ -307,7 +309,7 @@ public class ElektrokomponentyGUI extends JFrame implements ActionListener, ISim
                 public void run() {
 
                     for (int i = 2; i <= 6; i++) {
-                        simulation = new MySimulation(Integer.parseInt(textFieldWorkersOrderGraph.getText()), i);
+                        simulation = new MySimulation(Integer.parseInt(textFieldWorkersOrderGraph.getText()), i, checkBoxValidationGraph.isSelected());
 
                         threadSimulationInner1 = new Thread(new Runnable() {
                             public void run() {
