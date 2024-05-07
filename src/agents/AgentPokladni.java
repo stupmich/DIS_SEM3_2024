@@ -15,6 +15,9 @@ import java.util.LinkedList;
 public class AgentPokladni extends Agent
 {
 	private int highestWorkersPaymentID;
+	private boolean firstWorkerCashierOnLunch;
+	private Worker workerFirstCashier;
+	private Worker workerFromService;
 	private SimQueue<Worker> workersPayment;
 	private SimQueue<Worker> workersPaymentWorking;
 	private SimQueue<Worker> workersPaymentLunch;
@@ -58,6 +61,7 @@ public class AgentPokladni extends Agent
 		new ProcesPlatba(Id.procesPlatba, mySim(), this);
 		addOwnMessage(Mc.jeCasObedu);
 		addOwnMessage(Mc.platenie);
+		addOwnMessage(Mc.dajPracovnika);
 		addOwnMessage(Mc.jeKoniecCasuObedu);
 	}
 	//meta! tag="end"
@@ -85,5 +89,29 @@ public class AgentPokladni extends Agent
 
 	public void setLunchTime(boolean lunchTime) {
 		this.lunchTime = lunchTime;
+	}
+
+	public Worker getWorkerFirstCashier() {
+		return workerFirstCashier;
+	}
+
+	public void setWorkerFirstCashier(Worker workerFirstCashier) {
+		this.workerFirstCashier = workerFirstCashier;
+	}
+
+	public boolean isFirstWorkerCashierOnLunch() {
+		return firstWorkerCashierOnLunch;
+	}
+
+	public void setFirstWorkerCashierOnLunch(boolean firstWorkerCashierOnLunch) {
+		this.firstWorkerCashierOnLunch = firstWorkerCashierOnLunch;
+	}
+
+	public Worker getWorkerFromService() {
+		return workerFromService;
+	}
+
+	public void setWorkerFromService(Worker workerFromService) {
+		this.workerFromService = workerFromService;
 	}
 }

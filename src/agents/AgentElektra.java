@@ -33,6 +33,8 @@ public class AgentElektra extends Agent
 		addOwnMessage(Mc.vyzdvihnutieVelkejObjednavky);
 		addOwnMessage(Mc.platenie);
 		addOwnMessage(Mc.uvolniloSaMiesto);
+		addOwnMessage(Mc.dajPracovnika);
+		addOwnMessage(Mc.vrateniePracovnika);
 		addOwnMessage(Mc.vydanieListku);
 		addOwnMessage(Mc.jeKoniecCasuObedu);
 	}

@@ -143,6 +143,26 @@ public class ManagerElektra extends Manager
 		notice(nextMessage);
 	}
 
+	//meta! sender="AgentObsluznychMiest", id="97", type="Response"
+	public void processDajPracovnikaAgentObsluznychMiest(MessageForm message)
+	{
+		response(message);
+	}
+
+	//meta! sender="AgentPokladni", id="96", type="Request"
+	public void processDajPracovnikaAgentPokladni(MessageForm message)
+	{
+		message.setAddressee(mySim().findAgent(Id.agentObsluznychMiest));
+		request(message);
+	}
+
+	//meta! sender="AgentPokladni", id="98", type="Notice"
+	public void processVrateniePracovnika(MessageForm message)
+	{
+		message.setAddressee(mySim().findAgent(Id.agentObsluznychMiest));
+		notice(message);
+	}
+
 	//meta! userInfo="Generated code: do not modify", tag="begin"
 	public void init()
 	{
@@ -161,23 +181,6 @@ public class ManagerElektra extends Manager
 			processInicializuj(message);
 		break;
 
-		case Mc.vyzdvihnutieVelkejObjednavky:
-			processVyzdvihnutieVelkejObjednavky(message);
-		break;
-
-		case Mc.dajPocetMiestVCakarni:
-			switch (message.sender().id())
-			{
-			case Id.agentAutomatu:
-				processDajPocetMiestVCakarniAgentAutomatu(message);
-			break;
-
-			case Id.agentObsluznychMiest:
-				processDajPocetMiestVCakarniAgentObsluznychMiest(message);
-			break;
-			}
-		break;
-
 		case Mc.pripravaObjednavky:
 			processPripravaObjednavky(message);
 		break;
@@ -186,20 +189,54 @@ public class ManagerElektra extends Manager
 			processVydanieListku(message);
 		break;
 
-		case Mc.obsluhaZakaznika:
-			processObsluhaZakaznika(message);
-		break;
-
 		case Mc.uvolniloSaMiesto:
 			processUvolniloSaMiesto(message);
 		break;
 
-		case Mc.platenie:
-			processPlatenie(message);
-		break;
-
 		case Mc.jeKoniecCasuObedu:
 			processJeKoniecCasuObedu(message);
+		break;
+
+		case Mc.dajPocetMiestVCakarni:
+			switch (message.sender().id())
+			{
+			case Id.agentObsluznychMiest:
+				processDajPocetMiestVCakarniAgentObsluznychMiest(message);
+			break;
+
+			case Id.agentAutomatu:
+				processDajPocetMiestVCakarniAgentAutomatu(message);
+			break;
+			}
+		break;
+
+		case Mc.vyzdvihnutieVelkejObjednavky:
+			processVyzdvihnutieVelkejObjednavky(message);
+		break;
+
+		case Mc.dajPracovnika:
+			switch (message.sender().id())
+			{
+			case Id.agentObsluznychMiest:
+				processDajPracovnikaAgentObsluznychMiest(message);
+			break;
+
+			case Id.agentPokladni:
+				processDajPracovnikaAgentPokladni(message);
+			break;
+			}
+		break;
+
+		case Mc.vrateniePracovnika:
+			processVrateniePracovnika(message);
+		break;
+
+		case Mc.obsluhaZakaznika:
+			processObsluhaZakaznika(message);
+		break;
+
+		case Mc.platenie:
+			processPlatenie(message);
 		break;
 
 		default:

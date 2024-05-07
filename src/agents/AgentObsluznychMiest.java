@@ -15,6 +15,7 @@ import java.util.LinkedList;
 public class AgentObsluznychMiest extends Agent
 {
 	private int highestWorkersOrderID;
+	private MessageForm requestForWorker;
 	private SimQueue< MessageForm > CustomersWaitingInShopBeforeOrder;
 	private SimQueue<Worker> workersOrderNormal;
 	private SimQueue<Worker> workersOrderOnline;
@@ -70,6 +71,8 @@ public class AgentObsluznychMiest extends Agent
 		addOwnMessage(Mc.pripravaObjednavky);
 		addOwnMessage(Mc.dajPocetMiestVCakarni);
 		addOwnMessage(Mc.vyzdvihnutieVelkejObjednavky);
+		addOwnMessage(Mc.vrateniePracovnika);
+		addOwnMessage(Mc.dajPracovnika);
 		addOwnMessage(Mc.jeKoniecCasuObedu);
 	}
 	//meta! tag="end"
@@ -96,5 +99,13 @@ public class AgentObsluznychMiest extends Agent
 
 	public Stat getAverageTimeWaitingServiceStat() {
 		return averageTimeWaitingServiceStat;
+	}
+
+	public MessageForm getRequestForWorker() {
+		return requestForWorker;
+	}
+
+	public void setRequestForWorker(MessageForm requestForWorker) {
+		this.requestForWorker = requestForWorker;
 	}
 }

@@ -84,19 +84,34 @@ public class ManagerObsluznychMiest extends Manager {
 	//meta! sender="ProcesPripravaObjednavky", id="47", type="Finish"
 	public void processFinishProcesPripravaObjednavky(MessageForm message) {
         Customer customer = ((MyMessage) message).getCustomer();
+        Worker worker = ((MyMessage) message).getWorker();
         boolean newFreePlace = false;
 
         if (customer.getSizeOfOrder() == Customer.SizeOfOrder.REGULAR) {
-            // Customer picked up order -> worker is free again and can serve another customer
-            newFreePlace = tryToServeNextCustomer(message);
+            // only when order size is regular worker ended its service, other than that worker is blocked till customer comes back
+            if (myAgent().getRequestForWorker() != null && worker.getId() == 0) {
+                // if there is request for worker and worker which ended service is from first service place -> send him to cash register
+                myAgent().getWorkersOrderWorkingNormal().remove(worker);
 
-            if (newFreePlace) {
-                MyMessage nextMessage = new MyMessage(mySim());
-                nextMessage.setNumberOfFreePlacesWaitingRoom(9 - myAgent().getCustomersWaitingInShopBeforeOrder().size());
-                nextMessage.setCode(Mc.uvolniloSaMiesto);
-                nextMessage.setAddressee(mySim().findAgent(Id.agentElektra));
+                MyMessage mess = ((MyMessage) myAgent().getRequestForWorker());
+                worker.clearCustomer();
+                mess.setWorker(worker);
 
-                notice(nextMessage);
+                myAgent().setRequestForWorker(null);
+
+                response(mess);
+            } else {
+                // Customer picked up order -> worker is free again and can serve another customer
+                newFreePlace = tryToServeNextCustomer(message);
+
+                if (newFreePlace) {
+                    MyMessage nextMessage = new MyMessage(mySim());
+                    nextMessage.setNumberOfFreePlacesWaitingRoom(9 - myAgent().getCustomersWaitingInShopBeforeOrder().size());
+                    nextMessage.setCode(Mc.uvolniloSaMiesto);
+                    nextMessage.setAddressee(mySim().findAgent(Id.agentElektra));
+
+                    notice(nextMessage);
+                }
             }
         }
 
@@ -113,18 +128,33 @@ public class ManagerObsluznychMiest extends Manager {
 
 	//meta! sender="ProcesVyzdvihnutieVelkehoTovaru", id="49", type="Finish"
 	public void processFinishProcesVyzdvihnutieVelkehoTovaru(MessageForm message) {
-        boolean newFreePlace = false;
+        Worker worker = ((MyMessage)message).getWorker();
 
-        // Customer picked up order -> worker is free again and can serve another customer
-        newFreePlace = tryToServeNextCustomer(message);
+        if (myAgent().getRequestForWorker() != null && worker.getId() == 0) {
+            // if there is request for worker and worker which ended service is from first service place -> send him to cash register
+            myAgent().getWorkersOrderWorkingNormal().remove(worker);
 
-        if (newFreePlace) {
-            MyMessage nextMessage = new MyMessage(mySim());
-            nextMessage.setNumberOfFreePlacesWaitingRoom(9 - myAgent().getCustomersWaitingInShopBeforeOrder().size());
-            nextMessage.setCode(Mc.uvolniloSaMiesto);
-            nextMessage.setAddressee(mySim().findAgent(Id.agentElektra));
+            MyMessage mess = ((MyMessage) myAgent().getRequestForWorker());
+            worker.clearCustomer();
+            mess.setWorker(worker);
 
-            notice(nextMessage);
+            myAgent().setRequestForWorker(null);
+
+            response(mess);
+        } else {
+            boolean newFreePlace = false;
+
+            // Customer picked up order -> worker is free again and can serve another customer
+            newFreePlace = tryToServeNextCustomer(message);
+
+            if (newFreePlace) {
+                MyMessage nextMessage = new MyMessage(mySim());
+                nextMessage.setNumberOfFreePlacesWaitingRoom(9 - myAgent().getCustomersWaitingInShopBeforeOrder().size());
+                nextMessage.setCode(Mc.uvolniloSaMiesto);
+                nextMessage.setAddressee(mySim().findAgent(Id.agentElektra));
+
+                notice(nextMessage);
+            }
         }
 
         ((MyMessage)message).setWorker(null);
@@ -150,6 +180,52 @@ public class ManagerObsluznychMiest extends Manager {
 	//meta! sender="AgentElektra", id="94", type="Notice"
 	public void processJeKoniecCasuObedu(MessageForm message)
 	{
+        myAgent().setRequestForWorker(null);
+	}
+
+	//meta! sender="AgentElektra", id="97", type="Request"
+	public void processDajPracovnika(MessageForm message)
+	{
+        Worker workerFirstServicePlace = null;
+
+        for (Worker worker: myAgent().getWorkersOrderNormal()) {
+            if (worker.getId() == 0) {
+                workerFirstServicePlace = worker;
+                break;
+            }
+        }
+
+        if (workerFirstServicePlace != null) {
+            // worker from first service place is free -> can work as cashier
+            myAgent().getWorkersOrderNormal().remove(workerFirstServicePlace);
+            ((MyMessage)message).setWorker(workerFirstServicePlace);
+            response(message);
+        } else {
+            // worker still works, have to wait till he ends service
+            myAgent().setRequestForWorker(message);
+        }
+	}
+
+	//meta! sender="AgentElektra", id="101", type="Notice"
+	public void processVrateniePracovnika(MessageForm message)
+	{
+//        Worker worker = ((MyMessage)message).getWorker();
+//        //todo start work
+//        myAgent().getWorkersOrderNormal().add(worker);
+
+        Customer dummy = new Customer(-1,mySim(),-1, Customer.CustomerType.REGULAR);
+        ((MyMessage)message).setCustomer(dummy);
+
+        boolean newFreePlace = tryToServeNextCustomer(message);
+
+        if (newFreePlace) {
+            MyMessage nextMessage = new MyMessage(mySim());
+            nextMessage.setNumberOfFreePlacesWaitingRoom(9 - myAgent().getCustomersWaitingInShopBeforeOrder().size());
+            nextMessage.setCode(Mc.uvolniloSaMiesto);
+            nextMessage.setAddressee(mySim().findAgent(Id.agentElektra));
+
+            notice(nextMessage);
+        }
 	}
 
 	//meta! userInfo="Generated code: do not modify", tag="begin"
@@ -183,8 +259,16 @@ public class ManagerObsluznychMiest extends Manager {
 			processJeKoniecCasuObedu(message);
 		break;
 
+		case Mc.vrateniePracovnika:
+			processVrateniePracovnika(message);
+		break;
+
 		case Mc.vyzdvihnutieVelkejObjednavky:
 			processVyzdvihnutieVelkejObjednavky(message);
+		break;
+
+		case Mc.dajPracovnika:
+			processDajPracovnika(message);
 		break;
 
 		case Mc.pripravaObjednavky:

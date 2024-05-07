@@ -111,6 +111,11 @@ public class ManagerAutomatu extends Manager {
 	{
 	}
 
+	//meta! userInfo="Removed from model"
+	public void processVrateniePracovnika(MessageForm message)
+	{
+	}
+
 	//meta! userInfo="Generated code: do not modify", tag="begin"
 	public void init()
 	{

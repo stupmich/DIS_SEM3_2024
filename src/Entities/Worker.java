@@ -52,4 +52,8 @@ public class Worker extends Entity {
     public void setCustomer(Customer customer) {
         this.customer = customer;
     }
+    public void clearCustomer() {
+        this.customer = null;
+        this.idCustomer = -1;
+    }
 }

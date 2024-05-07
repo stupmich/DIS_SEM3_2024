@@ -5,7 +5,7 @@
       <SimId>6</SimId>
       <InternalId>7</InternalId>
       <Name>AgentPokladni</Name>
-      <Bounds>1924,101,180,180</Bounds>
+      <Bounds>2037,140,180,180</Bounds>
       <Reasoner>ManagerPokladni</Reasoner>
       <ReasonerBounds>74,25,32,25</ReasonerBounds>
       <UsePetriNet>false</UsePetriNet>
@@ -31,7 +31,7 @@
       <SimId>8</SimId>
       <InternalId>17</InternalId>
       <Name>AgentObed</Name>
-      <Bounds>2046,999,180,180</Bounds>
+      <Bounds>2116,1063,180,180</Bounds>
       <Reasoner>ManagerObed</Reasoner>
       <ReasonerBounds>74,25,32,25</ReasonerBounds>
       <UsePetriNet>false</UsePetriNet>
@@ -54,7 +54,7 @@
       <SimId>9</SimId>
       <InternalId>23</InternalId>
       <Name>AgentAutomatu</Name>
-      <Bounds>538,483,180,180</Bounds>
+      <Bounds>613,431,180,180</Bounds>
       <Reasoner>ManagerAutomatu</Reasoner>
       <ReasonerBounds>74,25,32,25</ReasonerBounds>
       <UsePetriNet>false</UsePetriNet>
@@ -77,7 +77,7 @@
       <SimId>3</SimId>
       <InternalId>3</InternalId>
       <Name>AgentOkolia</Name>
-      <Bounds>710,223,180,180</Bounds>
+      <Bounds>615,187,180,180</Bounds>
       <Reasoner>ManagerOkolia</Reasoner>
       <ReasonerBounds>74,25,32,25</ReasonerBounds>
       <UsePetriNet>false</UsePetriNet>
@@ -121,7 +121,7 @@
       <SimId>5</SimId>
       <InternalId>6</InternalId>
       <Name>AgentObsluznychMiest</Name>
-      <Bounds>1158,1124,180,180</Bounds>
+      <Bounds>1228,1172,180,180</Bounds>
       <Reasoner>ManagerObsluznychMiest</Reasoner>
       <ReasonerBounds>74,25,32,25</ReasonerBounds>
       <UsePetriNet>false</UsePetriNet>
@@ -339,6 +339,30 @@
       <Destination>6</Destination>
     </Message>
     <Message>
+      <SimId>1023</SimId>
+      <InternalId>96</InternalId>
+      <Name>dajPracovnika</Name>
+      <Type>RequestResponse</Type>
+      <Source>7</Source>
+      <Destination>5</Destination>
+    </Message>
+    <Message>
+      <SimId>1024</SimId>
+      <InternalId>97</InternalId>
+      <Name>dajPracovnika</Name>
+      <Type>RequestResponse</Type>
+      <Source>5</Source>
+      <Destination>6</Destination>
+    </Message>
+    <Message>
+      <SimId>1025</SimId>
+      <InternalId>98</InternalId>
+      <Name>vrateniePracovnika</Name>
+      <Type>Notice</Type>
+      <Source>7</Source>
+      <Destination>5</Destination>
+    </Message>
+    <Message>
       <InternalId>35</InternalId>
       <Type>StartFinish</Type>
       <Source>3</Source>
@@ -349,6 +373,14 @@
       <Type>StartFinish</Type>
       <Source>3</Source>
       <Destination>36</Destination>
+    </Message>
+    <Message>
+      <SimId>1027</SimId>
+      <InternalId>101</InternalId>
+      <Name>vrateniePracovnika</Name>
+      <Type>Notice</Type>
+      <Source>5</Source>
+      <Destination>6</Destination>
     </Message>
     <Message>
       <InternalId>39</InternalId>
@@ -425,5 +457,5 @@
       <Destination>23</Destination>
     </Message>
   </Messages>
-  <IID>95</IID>
+  <IID>102</IID>
 </ABAsim>

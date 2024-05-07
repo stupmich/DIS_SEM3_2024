@@ -153,11 +153,13 @@ public class ElektrokomponentyGUI extends JFrame implements ActionListener, ISim
 
         modelWorkersPayment = new DefaultTableModel();
         modelWorkersPayment.addColumn("Worker ID");
+        modelWorkersPayment.addColumn("Worker type");
         modelWorkersPayment.addColumn("Customer ID");
         tableFreeW2.setModel(modelWorkersPayment);
 
         modelWorkersPaymentW = new DefaultTableModel();
         modelWorkersPaymentW.addColumn("Worker ID");
+        modelWorkersPaymentW.addColumn("Worker type");
         modelWorkersPaymentW.addColumn("Customer ID");
         tableWorkingW2.setModel(modelWorkersPaymentW);
 
@@ -518,16 +520,15 @@ public class ElektrokomponentyGUI extends JFrame implements ActionListener, ISim
                         modelWorkersPayment.setRowCount(0);
                         for (Worker worker : ((MySimulation) simulation).agentPokladni().getWorkersPayment()) {
                             if (worker.getIdCustomer() == -1) {
-                                modelWorkersPayment.addRow(new Object[]{worker.getId(), "Free"});
-
+                                modelWorkersPayment.addRow(new Object[]{worker.getId(), worker.getType(), "Free"});
                             } else {
-                                modelWorkersPayment.addRow(new Object[]{worker.getId(), Integer.toString(worker.getIdCustomer())});
+                                modelWorkersPayment.addRow(new Object[]{worker.getId(), worker.getType(), Integer.toString(worker.getIdCustomer())});
                             }
                         }
 
                         modelWorkersPaymentW.setRowCount(0);
                         for (Worker worker : ((MySimulation) simulation).agentPokladni().getWorkersPaymentWorking()) {
-                            modelWorkersPaymentW.addRow(new Object[]{worker.getId(), Integer.toString(worker.getIdCustomer())});
+                            modelWorkersPaymentW.addRow(new Object[]{worker.getId(), worker.getType(), Integer.toString(worker.getIdCustomer())});
                         }
 
                         modelWorkersPaymentL.setRowCount(0);
