@@ -59,10 +59,7 @@ public class ManagerPokladni extends Manager {
                 myAgent().setFirstWorkerCashierOnLunch(true);
             }
         }
-        // TODO MOZNO SORT PODLA CASU ZACIATKU CAKANIA
-
         // send message to get worker for first cash register from first service place
-//		MyMessage nextMessage = new MyMessage(((MyMessage) message));
         message.setCode(Mc.dajPracovnika);
         message.setAddressee(mySim().findAgent(Id.agentElektra));
         request(message);

@@ -15,6 +15,7 @@ public class MySimulation extends Simulation
 	private int numberOfNormalWorkers;
 	private int numberOfOnlineWorkers;
 	private boolean	validationMode;
+	private boolean	increasedFlowCustomers;
 	private Random seedGenerator;
 	private Stat timeInSystemStat;
 	private Stat averageTimeWaitingServiceStat;
@@ -26,7 +27,7 @@ public class MySimulation extends Simulation
 	private Stat averageUsePercentOrderStat;
 	private Stat averageUsePercentPaymentStat;
 
-	public MySimulation(int numberOfWorkersOrder, int numberOfWorkersPayment, boolean validationMode)
+	public MySimulation(int numberOfWorkersOrder, int numberOfWorkersPayment, boolean validationMode, boolean increasedFlowCustomers)
 	{
 		seedGenerator = new Random();
 		this.numberOfWorkersOrder = numberOfWorkersOrder;
@@ -34,6 +35,7 @@ public class MySimulation extends Simulation
 		this.numberOfOnlineWorkers = this.numberOfWorkersOrder / 3;
 		this.numberOfNormalWorkers = this.numberOfWorkersOrder - numberOfOnlineWorkers;
 		this.validationMode = validationMode;
+		this.increasedFlowCustomers = increasedFlowCustomers;
 
 		init();
 	}
@@ -233,4 +235,7 @@ public AgentAutomatu agentAutomatu()
 		return averageUsePercentPaymentStat;
 	}
 
+	public boolean isIncreasedFlowCustomers() {
+		return increasedFlowCustomers;
+	}
 }

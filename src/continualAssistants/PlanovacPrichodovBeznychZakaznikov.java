@@ -14,7 +14,12 @@ public class PlanovacPrichodovBeznychZakaznikov extends Scheduler
 	public PlanovacPrichodovBeznychZakaznikov(int id, Simulation mySim, CommonAgent myAgent)
 	{
 		super(id, mySim, myAgent);
-		_exp = new ExponentialRNG(60/15.0, ((MySimulation)mySim()).getSeedGenerator());
+
+		if (((MySimulation)mySim()).isIncreasedFlowCustomers()) {
+			_exp = new ExponentialRNG(60/(15.0 * 1.3), ((MySimulation)mySim()).getSeedGenerator());
+		} else {
+			_exp = new ExponentialRNG(60/15.0, ((MySimulation)mySim()).getSeedGenerator());
+		}
 	}
 
 	@Override
