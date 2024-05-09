@@ -109,7 +109,7 @@ public class ManagerObsluznychMiest extends Manager {
 
                 if (newFreePlace) {
                     MyMessage nextMessage = new MyMessage(mySim());
-                    nextMessage.setNumberOfFreePlacesWaitingRoom(9 - myAgent().getCustomersWaitingInShopBeforeOrder().size());
+                    nextMessage.setNumberOfFreePlacesWaitingRoom(Config.numberOfPlacesBeforeService - myAgent().getCustomersWaitingInShopBeforeOrder().size());
                     nextMessage.setCode(Mc.uvolniloSaMiesto);
                     nextMessage.setAddressee(mySim().findAgent(Id.agentElektra));
 
@@ -142,7 +142,7 @@ public class ManagerObsluznychMiest extends Manager {
 
             if (newFreePlace) {
                 MyMessage nextMessage = new MyMessage(mySim());
-                nextMessage.setNumberOfFreePlacesWaitingRoom(9 - myAgent().getCustomersWaitingInShopBeforeOrder().size());
+                nextMessage.setNumberOfFreePlacesWaitingRoom(Config.numberOfPlacesBeforeService - myAgent().getCustomersWaitingInShopBeforeOrder().size());
                 nextMessage.setCode(Mc.uvolniloSaMiesto);
                 nextMessage.setAddressee(mySim().findAgent(Id.agentElektra));
 
@@ -166,7 +166,7 @@ public class ManagerObsluznychMiest extends Manager {
     public void processDajPocetMiestVCakarni(MessageForm message) {
         message.setCode(Mc.dajPocetMiestVCakarni);
         message.setAddressee(mySim().findAgent(Id.agentElektra));
-        ((MyMessage) message).setNumberOfFreePlacesWaitingRoom(9 - myAgent().getCustomersWaitingInShopBeforeOrder().size());
+        ((MyMessage) message).setNumberOfFreePlacesWaitingRoom(Config.numberOfPlacesBeforeService - myAgent().getCustomersWaitingInShopBeforeOrder().size());
 
         response(message);
     }
@@ -221,7 +221,7 @@ public class ManagerObsluznychMiest extends Manager {
 
         if (newFreePlace) {
             MyMessage nextMessage = new MyMessage(mySim());
-            nextMessage.setNumberOfFreePlacesWaitingRoom(9 - myAgent().getCustomersWaitingInShopBeforeOrder().size());
+            nextMessage.setNumberOfFreePlacesWaitingRoom(Config.numberOfPlacesBeforeService - myAgent().getCustomersWaitingInShopBeforeOrder().size());
             nextMessage.setCode(Mc.uvolniloSaMiesto);
             nextMessage.setAddressee(mySim().findAgent(Id.agentElektra));
 
